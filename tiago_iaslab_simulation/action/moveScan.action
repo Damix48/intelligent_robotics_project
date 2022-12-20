@@ -1,0 +1,11 @@
+# goal definition
+Header goal_header
+geometry_msgs/Pose pose
+---
+# result definition
+Header result_header
+geometry_msgs/PointStamped[] obstacles
+---
+# feedback
+Header feedback_header
+uint8 current_status

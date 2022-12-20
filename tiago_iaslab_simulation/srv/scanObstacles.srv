@@ -1,0 +1,4 @@
+Header request_header
+---
+Header response_header
+geometry_msgs/PointStamped[] obstacles
