@@ -66,3 +66,15 @@ std::vector<geometry_msgs::PointStamped> ScannerServer::getObstaclesPosition(con
 
   return std::vector<geometry_msgs::PointStamped>();
 }
+
+ std::vector<std::vector<geometry_msgs::PointStamped>> ScannerServer::removeSmallClusters(std::vector<std::vector<geometry_msgs::PointStamped>> clusters, int thresh){
+  std::vector<std::vector<geometry_msgs::PointStamped>> out;
+  for (int i = 0; i < clusters.size(); i++)
+  {
+    if (clusters[i].size() > thresh)
+    {
+      out.push_back(clusters[i]);
+    }
+  }
+  return out;
+}
