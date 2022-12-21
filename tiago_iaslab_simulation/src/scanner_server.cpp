@@ -1,15 +1,18 @@
 #include "tiago_iaslab_simulation/scanner_server.h"
+#include "tiago_iaslab_simulation/point.h"
 
 #include <ros/topic.h>
 #include <sensor_msgs/LaserScan.h>
 
 ScannerServer::ScannerServer(std::shared_ptr<ros::NodeHandle> nodeHandle_,
                              std::string scanTopic_) : nodeHandle(nodeHandle_),
-                                                       scanTopic(scanTopic_) {
+                                                       scanTopic(scanTopic_)
+{
   service = nodeHandle->advertiseService("scan_obstacles", &ScannerServer::sendObstacles, this);
 }
 
-bool ScannerServer::sendObstacles(tiago_iaslab_simulation::scanObstaclesRequest& request, tiago_iaslab_simulation::scanObstaclesResponse& response) {
+bool ScannerServer::sendObstacles(tiago_iaslab_simulation::scanObstaclesRequest &request, tiago_iaslab_simulation::scanObstaclesResponse &response)
+{
   boost::shared_ptr<const sensor_msgs::LaserScan> laser_msg = ros::topic::waitForMessage<sensor_msgs::LaserScan>(scanTopic, *nodeHandle);
 
   response.obstacles = getObstaclesPosition(*laser_msg);
@@ -17,15 +20,16 @@ bool ScannerServer::sendObstacles(tiago_iaslab_simulation::scanObstaclesRequest&
   return true;
 }
 
-std::vector<geometry_msgs::PointStamped> ScannerServer::getObstaclesPosition(const sensor_msgs::LaserScanConstPrt laserScan) {
+std::vector<geometry_msgs::PointStamped> ScannerServer::getObstaclesPosition(const sensor_msgs::LaserScan laserScan)
+{
   std::vector<std::vector<geometry_msgs::PointStamped>> clusters;
-  std::vector<float> ranges = laserScan->ranges;
-  float range_min = laserScan->range_min;
-  float range_max = laserScan->range_max;
-  float angle_min = laserScan->angle_min;
-  float angle_increment = laserScan->angle_increment;
+  std::vector<float> ranges = laserScan.ranges;
+  float range_min = laserScan.range_min;
+  float range_max = laserScan.range_max;
+  float angle_min = laserScan.angle_min;
+  float angle_increment = laserScan.angle_increment;
   float current_angle = angle_min;
-  
+
   // store first point in first cluster
   geometry_msgs::PointStamped p;
   std::vector<geometry_msgs::PointStamped> first_cluster;
@@ -33,10 +37,10 @@ std::vector<geometry_msgs::PointStamped> ScannerServer::getObstaclesPosition(con
   p.point.y = ranges[0] * sin(current_angle);
   first_cluster.push_back(p);
   clusters.push_back(first_cluster);
-  int j = 0; //index to keep track of # of cluster in which add points
-  
-  // threshold in radial distance for clustering 
-  float t = 0.5; 
+  int j = 0; // index to keep track of # of cluster in which add points
+
+  // threshold in radial distance for clustering
+  float t = 0.5;
 
   for (int i = 1; i < ranges.size(); i++)
   {
@@ -64,10 +68,78 @@ std::vector<geometry_msgs::PointStamped> ScannerServer::getObstaclesPosition(con
     current_angle += angle_increment;
   }
 
-  return std::vector<geometry_msgs::PointStamped>();
+  // remove small clusters
+  int cluster_min_size = 20;
+  std::vector<std::vector<geometry_msgs::PointStamped>> clusters2 = removeSmallClusters(clusters, cluster_min_size);
+
+  // for each cluster find if a circle fits
+  std::vector<geometry_msgs::PointStamped> obstacles;
+  float max_radius = 0.19;
+  float min_radius = 0.17;
+  for (int i = 0; i < clusters2.size(); i++)
+  {
+    float r;
+    geometry_msgs::PointStamped c;
+    if (isCircle(clusters2[i], max_radius, min_radius, r, c))
+    {
+      obstacles.push_back(c);
+      ROS_INFO("Obstacle found in (x,y)=(%f,%f). The radius is %f.", c.point.x, c.point.y, r);
+    }
+  }
+
+  return obstacles;
 }
 
- std::vector<std::vector<geometry_msgs::PointStamped>> ScannerServer::removeSmallClusters(std::vector<std::vector<geometry_msgs::PointStamped>> clusters, int thresh){
+bool ScannerServer::isCircle(std::vector<geometry_msgs::PointStamped> points, float max_radius, float min_radius, float &radius, geometry_msgs::PointStamped &center)
+{
+  // take first, middle and last point and find the circle radius and center
+  Point pt1 = points[0];
+  Point pt2 = points[std::round((points.size() - 1) / 2)];
+  Point pt3 = points[points.size() - 1];
+
+  float x12 = (pt1 - pt2).x;
+  float x13 = (pt1 - pt3).x;
+  float y12 = (pt1 - pt2).y;
+  float y13 = (pt1 - pt3).y;
+
+  float x21 = (pt2 - pt1).x;
+  float x31 = (pt3 - pt1).x;
+  float y21 = (pt2 - pt1).y;
+  float y31 = (pt3 - pt1).y;
+
+  float sx13 = pow(pt1.x, 2) - pow(pt3.x, 2);
+  float sy13 = pow(pt1.y, 2) - pow(pt3.y, 2);
+  float sx21 = pow(pt2.x, 2) - pow(pt1.x, 2);
+  float sy21 = pow(pt2.y, 2) - pow(pt1.y, 2);
+
+  float f = ((sx13) * (x12) + (sy13) * (x12) + (sx21) * (x13) + (sy21) * (x13)) / (2 * ((y31) * (x12) - (y21) * (x13)));
+  float g = ((sx13) * (y12) + (sy13) * (y12) + (sx21) * (y13) + (sy21) * (y13)) / (2 * ((x31) * (y12) - (x21) * (y13)));
+
+  float c = -pow(pt1.x, 2) - pow(pt1.y, 2) - 2 * g * pt1.x - 2 * f * pt1.y;
+
+  // center coordinates
+  float h = -g;
+  float k = -f;
+
+  // radius
+  float sqr_of_r = h * h + k * k - c;
+  float r = sqrt(sqr_of_r);
+
+  // set radius and center
+  radius = r;
+  center.header.frame_id = points[0].header.frame_id;
+  center.point.x = h;
+  center.point.y = k;
+
+  if (r >= min_radius && r <= max_radius)
+  {
+    return true;
+  }
+  return false;
+}
+
+std::vector<std::vector<geometry_msgs::PointStamped>> ScannerServer::removeSmallClusters(std::vector<std::vector<geometry_msgs::PointStamped>> clusters, int thresh)
+{
   std::vector<std::vector<geometry_msgs::PointStamped>> out;
   for (int i = 0; i < clusters.size(); i++)
   {

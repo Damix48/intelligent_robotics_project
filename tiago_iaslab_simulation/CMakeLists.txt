@@ -254,6 +254,7 @@ target_link_libraries(
 target_link_libraries(
   scanner_node
   scanner_server_lib
+  point_lib
   ${catkin_LIBRARIES}
 )
 
