@@ -11,7 +11,7 @@
 
 class MoveServer {
  private:
-  ros::NodeHandle nodeHandle;
+  std::shared_ptr<ros::NodeHandle> nodeHandle;
 
   actionlib::SimpleActionServer<tiago_iaslab_simulation::moveScanAction> actionServer;
   actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> moveActionClient;
@@ -21,7 +21,7 @@ class MoveServer {
   void move(const tiago_iaslab_simulation::moveScanGoalConstPtr& goal);
 
  public:
-  MoveServer(std::string topic);
+  MoveServer(std::shared_ptr<ros::NodeHandle> nodeHandle_, std::string topic);
 };
 
 #endif  // TIAGO_IASLAB_SIMULATION_MOVE_SERVER_H

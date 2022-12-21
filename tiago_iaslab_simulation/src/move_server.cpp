@@ -6,9 +6,11 @@
 
 #include "tiago_iaslab_simulation/scanObstacles.h"
 
-MoveServer::MoveServer(std::string topic) : actionServer(nodeHandle, topic, boost::bind(&MoveServer::move, this, _1), false),
+MoveServer::MoveServer(std::shared_ptr<ros::NodeHandle> nodeHandle_,
+                       std::string topic) : nodeHandle(nodeHandle_),
+                                            actionServer(*nodeHandle, topic, boost::bind(&MoveServer::move, this, _1), false),
                                             moveActionClient("move_base") {
-  scannerClient = nodeHandle.serviceClient<tiago_iaslab_simulation::scanObstacles>("scan_obstacles");
+  scannerClient = nodeHandle->serviceClient<tiago_iaslab_simulation::scanObstacles>("scan_obstacles");
 
   actionServer.start();
 }

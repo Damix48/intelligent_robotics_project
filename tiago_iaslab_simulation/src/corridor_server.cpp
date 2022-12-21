@@ -9,17 +9,19 @@
 
 #include "tiago_iaslab_simulation/point.h"
 
-CorridorServer::CorridorServer(float maxCorridorWidth_,
+CorridorServer::CorridorServer(std::shared_ptr<ros::NodeHandle> nodeHandle_,
+                               float maxCorridorWidth_,
                                std::string goalTopic_,
                                std::string robotPoseTopic_,
                                std::string scanTopic_,
                                std::string cmdVelTopic_,
-                               std::string pauseNavigationTopic_) : maxCorridorWidth(maxCorridorWidth_),
+                               std::string pauseNavigationTopic_) : nodeHandle(nodeHandle_),
+                                                                    maxCorridorWidth(maxCorridorWidth_),
                                                                     scanTopic(scanTopic_) {
-  getGoal = nodeHandle.subscribe(goalTopic_, 1000, &CorridorServer::getGoalCallback, this);
-  getRobotPose = nodeHandle.subscribe(robotPoseTopic_, 1000, &CorridorServer::getRobotPoseCallback, this);
-  cmdVel = nodeHandle.advertise<geometry_msgs::Twist>(cmdVelTopic_, 1);
-  navigation = nodeHandle.advertise<std_msgs::Bool>(pauseNavigationTopic_, 1);
+  getGoal = nodeHandle->subscribe(goalTopic_, 1000, &CorridorServer::getGoalCallback, this);
+  getRobotPose = nodeHandle->subscribe(robotPoseTopic_, 1000, &CorridorServer::getRobotPoseCallback, this);
+  cmdVel = nodeHandle->advertise<geometry_msgs::Twist>(cmdVelTopic_, 1);
+  navigation = nodeHandle->advertise<std_msgs::Bool>(pauseNavigationTopic_, 1);
 }
 
 void CorridorServer::getGoalCallback(const move_base_msgs::MoveBaseActionGoalConstPtr& goal) {
@@ -38,7 +40,7 @@ void CorridorServer::getRobotPoseCallback(const geometry_msgs::PoseWithCovarianc
 }
 
 void CorridorServer::start() {
-  scanner = nodeHandle.subscribe(scanTopic, 1000, &CorridorServer::scannerCallback, this);
+  scanner = nodeHandle->subscribe(scanTopic, 1000, &CorridorServer::scannerCallback, this);
 }
 
 void CorridorServer::stop() {
@@ -82,5 +84,5 @@ void CorridorServer::move(float distanceRight_, float distanceLeft_) {
 bool CorridorServer::isNearTarget(Point point) {
   Point target_(target);
 
-  return point.distance(target_) < 0.5;
+  return point.distance(target_) < maxCorridorWidth / 2;
 }

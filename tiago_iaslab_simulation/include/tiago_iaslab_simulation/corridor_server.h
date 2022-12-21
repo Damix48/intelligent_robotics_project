@@ -14,7 +14,7 @@
 
 class CorridorServer {
  private:
-  ros::NodeHandle nodeHandle;
+  std::shared_ptr<ros::NodeHandle> nodeHandle;
 
   std::string scanTopic;
 
@@ -42,7 +42,8 @@ class CorridorServer {
   bool isNearTarget(Point point);
 
  public:
-  CorridorServer(float maxCorridorWidth_,
+  CorridorServer(std::shared_ptr<ros::NodeHandle> nodeHandle_,
+                 float maxCorridorWidth_,
                  std::string goalTopic_ = "move_base/goal",
                  std::string robotPoseTopic_ = "robot_pose",
                  std::string scanTopic_ = "scan",
