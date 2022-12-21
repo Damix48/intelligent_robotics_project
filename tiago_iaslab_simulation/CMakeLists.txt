@@ -258,6 +258,10 @@ target_link_libraries(
   ${catkin_LIBRARIES}
 )
 
+add_dependencies(move_server_lib tiago_iaslab_simulation_generate_messages_cpp)
+add_dependencies(scanner_server_lib tiago_iaslab_simulation_generate_messages_cpp)
+
+add_dependencies(client ${tiago_iaslab_simulation_EXPORTED_TARGETS})
 add_dependencies(move_node ${tiago_iaslab_simulation_EXPORTED_TARGETS})
 add_dependencies(corridor_node ${tiago_iaslab_simulation_EXPORTED_TARGETS})
 add_dependencies(scanner_node ${tiago_iaslab_simulation_EXPORTED_TARGETS})
