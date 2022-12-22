@@ -20,11 +20,14 @@ class MoveServer {
 
   void move(const tiago_iaslab_simulation::moveScanGoalConstPtr& goal);
 
-  void doneCallback(const actionlib::SimpleClientGoalState& state, const move_base_msgs::MoveBaseActionResultConstPtr& moveBaseResult);
+  void doneCallback(const actionlib::SimpleClientGoalState& state, const move_base_msgs::MoveBaseResultConstPtr& moveBaseResult);
   void publishFeedback(const uint status);
 
  public:
-  MoveServer(std::shared_ptr<ros::NodeHandle> nodeHandle_, std::string topic);
+  MoveServer(std::shared_ptr<ros::NodeHandle> nodeHandle_,
+             std::string moveServerTopic = "move_server",
+             std::string moveBaseTopic = "move_base",
+             std::string scannerTopic = "scan_obstacles");
 };
 
 #endif  // TIAGO_IASLAB_SIMULATION_MOVE_SERVER_H

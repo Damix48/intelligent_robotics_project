@@ -5,15 +5,16 @@
 #include <move_base_msgs/MoveBaseAction.h>
 #include <tf2_ros/transform_listener.h>
 
-#include "move_server.h"
 #include "tiago_iaslab_simulation/scanObstacles.h"
 #include "tiago_iaslab_simulation/status_constant.h"
 
 MoveServer::MoveServer(std::shared_ptr<ros::NodeHandle> nodeHandle_,
-                       std::string topic) : nodeHandle(nodeHandle_),
-                                            actionServer(*nodeHandle, topic, boost::bind(&MoveServer::move, this, _1), false),
-                                            moveActionClient("move_base") {
-  scannerClient = nodeHandle->serviceClient<tiago_iaslab_simulation::scanObstacles>("scan_obstacles");
+                       std::string moveServerTopic,
+                       std::string moveBaseTopic,
+                       std::string scannerTopic) : nodeHandle(nodeHandle_),
+                                                   actionServer(*nodeHandle, moveServerTopic, boost::bind(&MoveServer::move, this, _1), false),
+                                                   moveActionClient(moveBaseTopic) {
+  scannerClient = nodeHandle->serviceClient<tiago_iaslab_simulation::scanObstacles>(scannerTopic);
 
   actionServer.start();
 
@@ -21,14 +22,12 @@ MoveServer::MoveServer(std::shared_ptr<ros::NodeHandle> nodeHandle_,
 }
 
 void MoveServer::move(const tiago_iaslab_simulation::moveScanGoalConstPtr& goal) {
-  ROS_INFO("Waiting for action server to start.");
   moveActionClient.waitForServer();
-  ROS_INFO("Action server started, sending goal.");
 
   move_base_msgs::MoveBaseGoal moveGoal;
   moveGoal.target_pose = goal->pose;
 
-  moveActionClient.sendGoal(moveGoal, &doneCallback);
+  moveActionClient.sendGoal(moveGoal, boost::bind(&MoveServer::doneCallback, this, _1, _2));
   publishFeedback(status::MOVING);
 
   bool timeout = moveActionClient.waitForResult(ros::Duration(300));
@@ -39,8 +38,8 @@ void MoveServer::move(const tiago_iaslab_simulation::moveScanGoalConstPtr& goal)
   }
 }
 
-void MoveServer::doneCallback(const actionlib::SimpleClientGoalState& state, const move_base_msgs::MoveBaseActionResultConstPtr& moveBaseResult) {
-  if (moveBaseResult->status.status == actionlib::SimpleClientGoalState::SUCCEEDED) {
+void MoveServer::doneCallback(const actionlib::SimpleClientGoalState& state, const move_base_msgs::MoveBaseResultConstPtr& moveBaseResult) {
+  if (state == actionlib::SimpleClientGoalState::SUCCEEDED) {
     publishFeedback(status::ARRIVED);
 
     if (scannerClient.exists()) {
