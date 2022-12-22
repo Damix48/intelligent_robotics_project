@@ -21,9 +21,7 @@ void MoveServer::move(const tiago_iaslab_simulation::moveScanGoalConstPtr& goal)
   ROS_INFO("Action server started, sending goal.");
 
   move_base_msgs::MoveBaseGoal moveGoal;
-  moveGoal.target_pose.header.frame_id = "map";
-  moveGoal.target_pose.header.stamp = ros::Time::now();
-  moveGoal.target_pose.pose = goal->pose;
+  moveGoal.target_pose = goal->pose;
 
   moveActionClient.sendGoal(moveGoal);
 

@@ -13,6 +13,7 @@ int main(int argc, char** argv) {
   float x_;
   float y_;
   float yaw_;
+  std::string frameId_;
 
   if (argc == 4) {
     x_ = atof(argv[1]);
@@ -38,7 +39,10 @@ int main(int argc, char** argv) {
   actionClient.waitForServer();
 
   tiago_iaslab_simulation::moveScanGoal goal;
-  goal.pose = iaslab::createPose(x_, y_, yaw_);
+
+  goal.pose.header.frame_id = "map";
+  goal.pose.header.stamp = ros::Time::now();
+  goal.pose.pose = iaslab::createPose(x_, y_, yaw_);
 
   actionClient.sendGoal(goal);
 

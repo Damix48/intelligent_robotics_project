@@ -1,6 +1,6 @@
 # goal definition
 Header goal_header
-geometry_msgs/Pose pose
+geometry_msgs/PoseStamped pose
 ---
 # result definition
 Header result_header
