@@ -20,7 +20,6 @@ class MoveServer {
 
   void move(const tiago_iaslab_simulation::moveScanGoalConstPtr& goal);
 
-  void doneCallback(const actionlib::SimpleClientGoalState& state, const move_base_msgs::MoveBaseResultConstPtr& moveBaseResult);
   void publishFeedback(const uint status);
 
  public:
