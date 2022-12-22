@@ -20,6 +20,9 @@ class MoveServer {
 
   void move(const tiago_iaslab_simulation::moveScanGoalConstPtr& goal);
 
+  void doneCallback(const actionlib::SimpleClientGoalState& state, const move_base_msgs::MoveBaseActionResultConstPtr& moveBaseResult);
+  void publishFeedback(const uint status);
+
  public:
   MoveServer(std::shared_ptr<ros::NodeHandle> nodeHandle_, std::string topic);
 };
