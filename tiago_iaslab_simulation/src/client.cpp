@@ -1,11 +1,17 @@
 #include "tiago_iaslab_simulation/client.h"
 
+#include <visualization_msgs/Marker.h>
+
 #include "tiago_iaslab_simulation/moveScanAction.h"
 #include "tiago_iaslab_simulation/status_constant.h"
 #include "tiago_iaslab_simulation/utils.h"
 
-Client::Client(std::shared_ptr<ros::NodeHandle> nodeHandle_, std::string moveServerTopic) : nodeHandle(nodeHandle_),
-                                                                                            actionClient(moveServerTopic) {}
+Client::Client(std::shared_ptr<ros::NodeHandle> nodeHandle_,
+               std::string moveServerTopic,
+               std::string visualizerTopic) : nodeHandle(nodeHandle_),
+                                              actionClient(moveServerTopic) {
+  visualizer = nodeHandle->advertise<visualization_msgs::Marker>(visualizerTopic, 1);
+}
 
 void Client::doneCallback(const actionlib::SimpleClientGoalState& state,
                           const tiago_iaslab_simulation::moveScanResultConstPtr& result) {
@@ -14,6 +20,29 @@ void Client::doneCallback(const actionlib::SimpleClientGoalState& state,
 
     for (size_t i = 0; i < result->obstacles.size(); i++) {
       ROS_INFO("Obstacle found in (x, y) = (%f, %f).", result->obstacles[i].point.x, result->obstacles[i].point.y);
+
+      visualization_msgs::Marker center;
+
+      center.action = center.ADD;
+      center.header = result->obstacles[i].header;
+      center.ns = "centers";
+      center.id = i;
+      center.type = center.SPHERE;
+
+      center.pose.position = result->obstacles[i].point;
+
+      center.scale.x = 0.1;
+      center.scale.y = 0.1;
+      center.scale.z = 0.1;
+
+      center.color.r = 0.0f;
+      center.color.g = 1.0f;
+      center.color.b = 0.0f;
+      center.color.a = 1.0;
+
+      center.lifetime = ros::Duration(0);
+
+      visualizer.publish(center);
     }
 
   } else {
