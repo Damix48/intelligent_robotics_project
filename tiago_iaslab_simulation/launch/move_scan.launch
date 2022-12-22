@@ -1,12 +1,14 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="target" default=""/>
-  <arg name="corridor" default="false"/>
+  <arg name="target" default="" />
+  <arg name="corridor" default="false" />
 
-  <node name="move_node_1" pkg="tiago_iaslab_simulation" type="move_node" output="screen"/>
-  <node name="scanner_node_1" pkg="tiago_iaslab_simulation" type="scanner_node" output="screen"/>
-  <node name="corridor_node_1" pkg="tiago_iaslab_simulation" type="corridor_node" if="$(arg corridor)" output="screen"/>
+  <node name="move_node_1" pkg="tiago_iaslab_simulation" type="move_node" output="screen" />
+  <node name="scanner_node_1" pkg="tiago_iaslab_simulation" type="scanner_node" output="screen" />
+  <node name="corridor_node_1" pkg="tiago_iaslab_simulation" type="corridor_node"
+    if="$(arg corridor)" output="screen" />
 
-  <node name="client_node_1" pkg="tiago_iaslab_simulation" type="client" args="$(arg target)" output="screen"/>
+  <node name="client_node_1" pkg="tiago_iaslab_simulation" type="client_node" args="$(arg target)"
+    output="screen" />
 
 </launch>

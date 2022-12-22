@@ -214,6 +214,7 @@ include_directories(
 
 # # Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+add_library(client_lib src/client.cpp)
 add_library(move_server_lib src/move_server.cpp)
 add_library(corridor_server_lib src/corridor_server.cpp)
 add_library(scanner_server_lib src/scanner_server.cpp)
@@ -221,10 +222,16 @@ add_library(utils_lib src/utils.cpp)
 add_library(map_lib src/map.cpp)
 add_library(point_lib src/point.cpp)
 
-add_executable(client client.cpp)
+add_executable(client_node client_node.cpp)
 add_executable(move_node move_node.cpp)
 add_executable(corridor_node corridor_node.cpp)
 add_executable(scanner_node scanner_node.cpp)
+
+target_link_libraries(
+  client_lib
+  utils_lib
+  ${catkin_LIBRARIES}
+)
 
 target_link_libraries(
   corridor_server_lib
@@ -233,8 +240,8 @@ target_link_libraries(
 )
 
 target_link_libraries(
-  client
-  utils_lib
+  client_node
+  client_lib
   map_lib
   ${catkin_LIBRARIES}
 )
@@ -258,10 +265,11 @@ target_link_libraries(
   ${catkin_LIBRARIES}
 )
 
+add_dependencies(client_lib tiago_iaslab_simulation_generate_messages_cpp)
 add_dependencies(move_server_lib tiago_iaslab_simulation_generate_messages_cpp)
 add_dependencies(scanner_server_lib tiago_iaslab_simulation_generate_messages_cpp)
 
-add_dependencies(client ${tiago_iaslab_simulation_EXPORTED_TARGETS})
+add_dependencies(client_node ${tiago_iaslab_simulation_EXPORTED_TARGETS})
 add_dependencies(move_node ${tiago_iaslab_simulation_EXPORTED_TARGETS})
 add_dependencies(corridor_node ${tiago_iaslab_simulation_EXPORTED_TARGETS})
 add_dependencies(scanner_node ${tiago_iaslab_simulation_EXPORTED_TARGETS})

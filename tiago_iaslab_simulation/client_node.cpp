@@ -1,12 +1,10 @@
-#include <actionlib/client/simple_action_client.h>
 #include <ros/ros.h>
 
+#include "tiago_iaslab_simulation/client.h"
 #include "tiago_iaslab_simulation/map2d.h"
-#include "tiago_iaslab_simulation/moveScanAction.h"
-#include "tiago_iaslab_simulation/utils.h"
 
 int main(int argc, char** argv) {
-  ros::init(argc, argv, "client");
+  ros::init(argc, argv, "client_node");
 
   Map2D map("map");
 
@@ -34,21 +32,16 @@ int main(int argc, char** argv) {
     } while (!map.isValidPoint(x_, y_));
   }
 
-  actionlib::SimpleActionClient<tiago_iaslab_simulation::moveScanAction> actionClient("move_server");
+  if (!map.isValidPoint(x_, y_)) {
+    return EXIT_FAILURE;
+  }
 
-  actionClient.waitForServer();
+  auto nh_ptr = std::make_shared<ros::NodeHandle>();
 
-  tiago_iaslab_simulation::moveScanGoal goal;
-
-  goal.pose.header.frame_id = "map";
-  goal.pose.header.stamp = ros::Time::now();
-  goal.pose.pose = iaslab::createPose(x_, y_, yaw_);
-
-  actionClient.sendGoal(goal);
-
-  actionClient.waitForResult();
+  Client client(nh_ptr);
+  client.sendPose(x_, y_, yaw_);
 
   ros::spin();
 
-  return 0;
+  return EXIT_SUCCESS;
 }
