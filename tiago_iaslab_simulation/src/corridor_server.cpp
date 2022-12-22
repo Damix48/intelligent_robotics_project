@@ -6,23 +6,27 @@
 #include <ros/subscriber.h>
 #include <sensor_msgs/LaserScan.h>
 #include <std_msgs/Bool.h>
+#include <std_msgs/UInt8.h>
 
 #include "tiago_iaslab_simulation/point.h"
+#include "tiago_iaslab_simulation/status_constant.h"
 
 CorridorServer::CorridorServer(std::shared_ptr<ros::NodeHandle> nodeHandle_,
                                float maxCorridorWidth_,
                                std::string goalTopic_,
                                std::string robotPoseTopic_,
                                std::string scanTopic_,
-                               std::string cmdVelTopic_,
-                               std::string pauseNavigationTopic_) : nodeHandle(nodeHandle_),
-                                                                    maxCorridorWidth(maxCorridorWidth_),
-                                                                    scanTopic(scanTopic_),
-                                                                    pauseNavigation(false) {
+                               std::string cmdVelTopic,
+                               std::string pauseNavigationTopic,
+                               std::string feedbackTopic) : nodeHandle(nodeHandle_),
+                                                            maxCorridorWidth(maxCorridorWidth_),
+                                                            scanTopic(scanTopic_),
+                                                            pauseNavigation(false) {
   getGoal = nodeHandle->subscribe(goalTopic_, 1000, &CorridorServer::getGoalCallback, this);
   getRobotPose = nodeHandle->subscribe(robotPoseTopic_, 1000, &CorridorServer::getRobotPoseCallback, this);
-  cmdVel = nodeHandle->advertise<geometry_msgs::Twist>(cmdVelTopic_, 1);
-  navigation = nodeHandle->advertise<std_msgs::Bool>(pauseNavigationTopic_, 1);
+  cmdVel = nodeHandle->advertise<geometry_msgs::Twist>(cmdVelTopic, 1);
+  navigation = nodeHandle->advertise<std_msgs::Bool>(pauseNavigationTopic, 1);
+  feedback = nodeHandle->advertise<std_msgs::UInt8>(feedbackTopic, 1);
 }
 
 void CorridorServer::getGoalCallback(const move_base_msgs::MoveBaseActionGoalConstPtr& goal) {
@@ -68,11 +72,13 @@ void CorridorServer::togglePauseNavigation(bool pauseNavigation_) {
     msg.data = pauseNavigation;
     navigation.publish(msg);
 
+    std_msgs::UInt8 feedback_;
     if (pauseNavigation) {
-      ROS_INFO("Navigation stopped.");
+      feedback_.data = status::MOVING_CORRIDOR;
     } else {
-      ROS_INFO("Navigation resumed.");
+      feedback_.data = status::MOVING;
     }
+    feedback.publish(feedback_);
   }
 }
 

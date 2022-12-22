@@ -23,6 +23,7 @@ class CorridorServer {
   ros::Subscriber scanner;
   ros::Publisher cmdVel;
   ros::Publisher navigation;
+  ros::Publisher feedback;
 
   float maxCorridorWidth;
   geometry_msgs::PoseStamped target;
@@ -48,8 +49,9 @@ class CorridorServer {
                  std::string goalTopic_ = "move_base/goal",
                  std::string robotPoseTopic_ = "robot_pose",
                  std::string scanTopic_ = "scan",
-                 std::string cmdVelTopic_ = "mobile_base_controller/cmd_vel",
-                 std::string pauseNavigationTopic_ = "pause_navigation");
+                 std::string cmdVelTopic = "mobile_base_controller/cmd_vel",
+                 std::string pauseNavigationTopic = "pause_navigation",
+                 std::string feedbackTopic = "move_server_feedback");
 };
 
 #endif  // TIAGO_IASLAB_SIMULATION_CORRIDOR_SERVER_H

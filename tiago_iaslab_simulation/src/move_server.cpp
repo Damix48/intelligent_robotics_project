@@ -3,6 +3,8 @@
 #include <actionlib/client/simple_action_client.h>
 #include <costmap_2d/costmap_2d_ros.h>
 #include <move_base_msgs/MoveBaseAction.h>
+#include <ros/subscriber.h>
+#include <std_msgs/UInt8.h>
 #include <tf2_ros/transform_listener.h>
 
 #include "tiago_iaslab_simulation/scanObstacles.h"
@@ -11,10 +13,12 @@
 MoveServer::MoveServer(std::shared_ptr<ros::NodeHandle> nodeHandle_,
                        std::string moveServerTopic,
                        std::string moveBaseTopic,
-                       std::string scannerTopic) : nodeHandle(nodeHandle_),
-                                                   actionServer(*nodeHandle, moveServerTopic, boost::bind(&MoveServer::move, this, _1), false),
-                                                   moveActionClient(moveBaseTopic) {
+                       std::string scannerTopic,
+                       std::string feedbackTopic) : nodeHandle(nodeHandle_),
+                                                    actionServer(*nodeHandle, moveServerTopic, boost::bind(&MoveServer::move, this, _1), false),
+                                                    moveActionClient(moveBaseTopic) {
   scannerClient = nodeHandle->serviceClient<tiago_iaslab_simulation::scanObstacles>(scannerTopic);
+  feedbackRelay = nodeHandle->subscribe(feedbackTopic, 1000, &MoveServer::feedbackRelayCallback, this);
 
   actionServer.start();
 }
@@ -76,4 +80,8 @@ void MoveServer::publishFeedback(const uint status) {
   feedback.current_status = status;
 
   actionServer.publishFeedback(feedback);
+}
+
+void MoveServer::feedbackRelayCallback(const std_msgs::UInt8ConstPtr& feedback) {
+  publishFeedback(feedback->data);
 }

@@ -6,6 +6,7 @@
 #include "tiago_iaslab_simulation/point.h"
 
 ScannerServer::ScannerServer(std::shared_ptr<ros::NodeHandle> nodeHandle_,
+                             std::string scannerServerTopic,
                              std::string scanTopic_,
                              float radialDistanceThreshold_,
                              int clusterMinSize_,
@@ -15,8 +16,8 @@ ScannerServer::ScannerServer(std::shared_ptr<ros::NodeHandle> nodeHandle_,
                                                  radialDistanceThreshold(radialDistanceThreshold_),
                                                  clusterMinSize(clusterMinSize_),
                                                  minRadius(minRadius_),
-                                                 maxRadius(maxRadius) {
-  service = nodeHandle->advertiseService("scan_obstacles", &ScannerServer::sendObstacles, this);
+                                                 maxRadius(maxRadius_) {
+  service = nodeHandle->advertiseService(scannerServerTopic, &ScannerServer::sendObstacles, this);
 }
 
 bool ScannerServer::sendObstacles(tiago_iaslab_simulation::scanObstaclesRequest &request, tiago_iaslab_simulation::scanObstaclesResponse &response) {
