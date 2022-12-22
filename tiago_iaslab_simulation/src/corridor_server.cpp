@@ -17,7 +17,8 @@ CorridorServer::CorridorServer(std::shared_ptr<ros::NodeHandle> nodeHandle_,
                                std::string cmdVelTopic_,
                                std::string pauseNavigationTopic_) : nodeHandle(nodeHandle_),
                                                                     maxCorridorWidth(maxCorridorWidth_),
-                                                                    scanTopic(scanTopic_) {
+                                                                    scanTopic(scanTopic_),
+                                                                    pauseNavigation(false) {
   getGoal = nodeHandle->subscribe(goalTopic_, 1000, &CorridorServer::getGoalCallback, this);
   getRobotPose = nodeHandle->subscribe(robotPoseTopic_, 1000, &CorridorServer::getRobotPoseCallback, this);
   cmdVel = nodeHandle->advertise<geometry_msgs::Twist>(cmdVelTopic_, 1);
@@ -35,7 +36,7 @@ void CorridorServer::getRobotPoseCallback(const geometry_msgs::PoseWithCovarianc
 
   if (isNearTarget(robotPosition)) {
     stop();
-    resumeNavigation();
+    togglePauseNavigation(false);
   }
 }
 
@@ -52,25 +53,27 @@ void CorridorServer::scannerCallback(const sensor_msgs::LaserScanConstPtr& msg) 
   float distanceLeft = msg->ranges[msg->ranges.size() - 66];
 
   if (distanceRight + distanceLeft < maxCorridorWidth) {
-    stopNavigation();
+    togglePauseNavigation(true);
     move(distanceRight, distanceLeft);
   } else {
-    resumeNavigation();
+    togglePauseNavigation(false);
   }
 }
 
-void CorridorServer::stopNavigation() {
-  std_msgs::Bool msg;
-  msg.data = true;
-  navigation.publish(msg);
-  ROS_INFO("Navigation stopped.");
-}
+void CorridorServer::togglePauseNavigation(bool pauseNavigation_) {
+  if (pauseNavigation != pauseNavigation_) {
+    pauseNavigation = pauseNavigation_;
 
-void CorridorServer::resumeNavigation() {
-  std_msgs::Bool msg;
-  msg.data = false;
-  navigation.publish(msg);
-  ROS_INFO("Navigation resumed.");
+    std_msgs::Bool msg;
+    msg.data = pauseNavigation;
+    navigation.publish(msg);
+
+    if (pauseNavigation) {
+      ROS_INFO("Navigation stopped.");
+    } else {
+      ROS_INFO("Navigation resumed.");
+    }
+  }
 }
 
 void CorridorServer::move(float distanceRight_, float distanceLeft_) {

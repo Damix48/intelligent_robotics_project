@@ -27,6 +27,8 @@ class CorridorServer {
   float maxCorridorWidth;
   geometry_msgs::PoseStamped target;
 
+  bool pauseNavigation;
+
   void start();
   void stop();
 
@@ -34,8 +36,7 @@ class CorridorServer {
   void getRobotPoseCallback(const geometry_msgs::PoseWithCovarianceStampedConstPtr& pose);
   void scannerCallback(const sensor_msgs::LaserScanConstPtr& msg);
 
-  void stopNavigation();
-  void resumeNavigation();
+  void togglePauseNavigation(bool pauseNavigation_);
 
   void move(float distanceRight_, float distanceLeft_);
 
