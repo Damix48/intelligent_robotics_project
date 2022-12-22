@@ -15,16 +15,33 @@ class ScannerServer {
   ros::ServiceServer service;
   std::string scanTopic;
 
+  float radialDistanceThreshold;
+  int clusterMinSize;
+  float minRadius;
+  float maxRadius;
+
   bool sendObstacles(tiago_iaslab_simulation::scanObstaclesRequest& request, tiago_iaslab_simulation::scanObstaclesResponse& response);
 
   std::vector<geometry_msgs::PointStamped> getObstaclesPosition(const sensor_msgs::LaserScan laserScan);
 
-  bool isCircle(std::vector<geometry_msgs::PointStamped> points, float max_radius, float min_radius, float& radius, geometry_msgs::PointStamped& center);
+  bool isCircle(std::vector<geometry_msgs::PointStamped> points, float& radius, geometry_msgs::PointStamped& center);
 
-  std::vector<std::vector<geometry_msgs::PointStamped>> removeSmallClusters(std::vector<std::vector<geometry_msgs::PointStamped>> clusters, int thresh);
+  std::vector<std::vector<geometry_msgs::PointStamped>> removeSmallClusters(std::vector<std::vector<geometry_msgs::PointStamped>> clusters);
 
  public:
-  ScannerServer(std::shared_ptr<ros::NodeHandle> nodeHandle_, std::string scanTopic_ = "scan");
+  /// @brief
+  /// @param nodeHandle_
+  /// @param scanTopic_ topic for subscribing to the robot laser range sensor
+  /// @param radialDistanceThreshold_ threshold in meters radial distance for clustering
+  /// @param clusterMinSize_ minumum number of points to create a cluster
+  /// @param minRadius_ minimum radius to consider a circle an obstacle
+  /// @param maxRadius_ maximum radius to consider a circle an obstacle
+  ScannerServer(std::shared_ptr<ros::NodeHandle> nodeHandle_,
+                std::string scanTopic_ = "scan",
+                float radialDistanceThreshold_ = 0.5,
+                int clusterMinSize_ = 10,
+                float minRadius_ = 0.15,
+                float maxRadius_ = 0.2);
 };
 
 #endif  // TIAGO_IASLAB_SIMULATION_SCANNER_SERVER_H

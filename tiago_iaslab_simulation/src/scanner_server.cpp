@@ -6,8 +6,16 @@
 #include "tiago_iaslab_simulation/point.h"
 
 ScannerServer::ScannerServer(std::shared_ptr<ros::NodeHandle> nodeHandle_,
-                             std::string scanTopic_) : nodeHandle(nodeHandle_),
-                                                       scanTopic(scanTopic_) {
+                             std::string scanTopic_,
+                             float radialDistanceThreshold_,
+                             int clusterMinSize_,
+                             float minRadius_,
+                             float maxRadius_) : nodeHandle(nodeHandle_),
+                                                 scanTopic(scanTopic_),
+                                                 radialDistanceThreshold(radialDistanceThreshold_),
+                                                 clusterMinSize(clusterMinSize_),
+                                                 minRadius(minRadius_),
+                                                 maxRadius(maxRadius) {
   service = nodeHandle->advertiseService("scan_obstacles", &ScannerServer::sendObstacles, this);
 }
 
@@ -37,9 +45,6 @@ std::vector<geometry_msgs::PointStamped> ScannerServer::getObstaclesPosition(con
   clusters.push_back(first_cluster);
   int j = 0;  // index to keep track of # of cluster in which add points
 
-  // threshold in radial distance for clustering
-  float t = 0.5;
-
   for (int i = 1; i < ranges.size(); i++) {
     if (ranges[i] >= range_min && ranges[i] <= range_max) {
       // from polar to cartesian coordinates
@@ -48,7 +53,7 @@ std::vector<geometry_msgs::PointStamped> ScannerServer::getObstaclesPosition(con
       pt.point.y = ranges[i] * sin(current_angle);
 
       // check if a new cluster must be created
-      if (std::abs(ranges[i] - ranges[i - 1]) >= t) {
+      if (std::abs(ranges[i] - ranges[i - 1]) >= radialDistanceThreshold) {
         // new cluster
         std::vector<geometry_msgs::PointStamped> new_cluster;
         new_cluster.push_back(pt);
@@ -62,29 +67,25 @@ std::vector<geometry_msgs::PointStamped> ScannerServer::getObstaclesPosition(con
   }
 
   // remove small clusters
-  int cluster_min_size = 20;
-  std::vector<std::vector<geometry_msgs::PointStamped>> clusters2 = removeSmallClusters(clusters, cluster_min_size);
+  std::vector<std::vector<geometry_msgs::PointStamped>> clusters2 = removeSmallClusters(clusters);
 
   // for each cluster find if a circle fits
   std::vector<geometry_msgs::PointStamped> obstacles;
-  float max_radius = 0.19;
-  float min_radius = 0.17;
   for (int i = 0; i < clusters2.size(); i++) {
     float r;
     geometry_msgs::PointStamped c;
-    if (isCircle(clusters2[i], max_radius, min_radius, r, c)) {
+    if (isCircle(clusters2[i], r, c)) {
       c.header.frame_id = laserScan.header.frame_id;
       c.header.stamp = laserScan.header.stamp;
       c.header.seq = i;
       obstacles.push_back(c);
-      ROS_INFO("Obstacle found in (x,y)=(%f,%f). The radius is %f.", c.point.x, c.point.y, r);
     }
   }
 
   return obstacles;
 }
 
-bool ScannerServer::isCircle(std::vector<geometry_msgs::PointStamped> points, float max_radius, float min_radius, float &radius, geometry_msgs::PointStamped &center) {
+bool ScannerServer::isCircle(std::vector<geometry_msgs::PointStamped> points, float &radius, geometry_msgs::PointStamped &center) {
   // take first, middle and last point and find the circle radius and center
   Point pt1 = points[0];
   Point pt2 = points[std::round((points.size() - 1) / 2)];
@@ -124,16 +125,17 @@ bool ScannerServer::isCircle(std::vector<geometry_msgs::PointStamped> points, fl
   center.point.x = h;
   center.point.y = k;
 
-  if (r >= min_radius && r <= max_radius) {
+  if (r >= minRadius && r <= maxRadius) {
     return true;
   }
+
   return false;
 }
 
-std::vector<std::vector<geometry_msgs::PointStamped>> ScannerServer::removeSmallClusters(std::vector<std::vector<geometry_msgs::PointStamped>> clusters, int thresh) {
+std::vector<std::vector<geometry_msgs::PointStamped>> ScannerServer::removeSmallClusters(std::vector<std::vector<geometry_msgs::PointStamped>> clusters) {
   std::vector<std::vector<geometry_msgs::PointStamped>> out;
   for (int i = 0; i < clusters.size(); i++) {
-    if (clusters[i].size() > thresh) {
+    if (clusters[i].size() > clusterMinSize) {
       out.push_back(clusters[i]);
     }
   }
