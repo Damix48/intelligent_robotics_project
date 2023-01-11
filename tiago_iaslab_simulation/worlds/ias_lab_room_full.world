@@ -108,52 +108,6 @@
         </link>
       </model>
 
-
-
-    <model name='small_bookshelf_1'>
-        <pose>4.87487 -2.42397 -0 0 -0 0</pose>
-        <scale>0.366191 0.366191 1.4571</scale>
-        <link name='link'>
-            <pose>4.87487 -2.42397 -0 0 -0 0</pose>
-            <velocity>0 0 0 0 -0 0</velocity>
-            <acceleration>0 0 -9.8 0 -0 0</acceleration>
-            <wrench>0 0 -9.8 0 -0 0</wrench>
-        </link>
-    </model>
-
-    <model name='small_bookshelf_2'>
-        <pose>6.16039 -1.34702 -0 -0 -0 -0</pose>
-        <scale>0.366191 0.366191 1.4571</scale>
-        <link name='link'>
-            <pose>6.16039 -1.34702 -0 -0 -0 -0</pose>
-            <velocity>0 0 0 0 -0 0</velocity>
-            <acceleration>0 0 -9.8 0 -0 0</acceleration>
-            <wrench>0 0 -9.8 0 -0 0</wrench>
-        </link>
-    </model>
-    <model name='small_bookshelf_3'>
-        <pose>5.81112 0.7632 -8e-06 -6e-06 0 0</pose>
-        <scale>0.366191 0.366191 1.4571</scale>
-        <link name='link'>
-            <pose>5.81112 0.7632 -8e-06 -6e-06 0 0</pose>
-            <velocity>0 0 0 0 -0 0</velocity>
-            <acceleration>0 0 -9.8 0 -0 0</acceleration>
-            <wrench>0 0 -9.8 0 -0 0</wrench>
-        </link>
-    </model>
-    <model name='small_bookshelf_6'>
-        <pose>4.1555 -0.295494 -0 0 -0 0</pose>
-        <scale>0.366191 0.366191 1.4571</scale>
-        <link name='link'>
-          <pose>4.1555 -0.295494 -0 0 -0 0</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 -9.8 0 -0 0</acceleration>
-          <wrench>0 0 -9.8 0 -0 0</wrench>
-        </link>
-    </model>
-
-
-    <!--
       <model name='construction_cone_1'>
         <pose>2.47486 -0.759354 -0 0 -1e-06 0</pose>
         <scale>0.366191 0.366191 1.4571</scale>
@@ -164,7 +118,26 @@
           <wrench>0 0 -9.8 0 -0 0</wrench>
         </link>
       </model>
-
+      <model name='construction_cone_2'>
+        <pose>6.16039 -1.34702 -0 -0 -0 -0</pose>
+        <scale>0.366191 0.366191 1.4571</scale>
+        <link name='link'>
+          <pose>6.16039 -1.34702 -0 -0 -0 -0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 -9.8 0 -0 0</acceleration>
+          <wrench>0 0 -9.8 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='construction_cone_3'>
+        <pose>5.81112 0.7632 -8e-06 -6e-06 0 0</pose>
+        <scale>0.366191 0.366191 1.4571</scale>
+        <link name='link'>
+          <pose>5.81112 0.7632 -8e-06 -6e-06 0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 -9.8 0 -0 0</acceleration>
+          <wrench>0 0 -9.8 0 -0 0</wrench>
+        </link>
+      </model>
       <model name='construction_cone_4'>
         <pose>0.89107 -0.016284 -0 0 -0 0</pose>
         <scale>0.366191 0.366191 1.4571</scale>
@@ -175,8 +148,26 @@
           <wrench>0 0 -9.8 0 -0 0</wrench>
         </link>
       </model>
-
-
+      <model name='construction_cone_5'>
+        <pose>4.87487 -2.42397 -0 0 -0 0</pose>
+        <scale>0.366191 0.366191 1.4571</scale>
+        <link name='link'>
+          <pose>4.87487 -2.42397 -0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 -9.8 0 -0 0</acceleration>
+          <wrench>0 0 -9.8 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='construction_cone_6'>
+        <pose>4.1555 -0.295494 -0 0 -0 0</pose>
+        <scale>0.366191 0.366191 1.4571</scale>
+        <link name='link'>
+          <pose>4.1555 -0.295494 -0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 -9.8 0 -0 0</acceleration>
+          <wrench>0 0 -9.8 0 -0 0</wrench>
+        </link>
+      </model>
       <model name='construction_cone_7'>
         <pose>3.57438 1.43433 -6e-06 -4e-06 0 0</pose>
         <scale>0.366191 0.366191 1.4571</scale>
@@ -230,7 +221,7 @@
           <wrench>0 0 -9.8 0 -0 0</wrench>
         </link>
       </model>
-    -->
+
     </state>
 
     <gui fullscreen='0'>
@@ -742,321 +733,7 @@
       </link>
       <static>1</static>
     </model>
-
-    <model name='small_bookshelf_1'>
-     <pose>2.96379 -6.89801 0.5 0 -0 0</pose>
-      <link name='link'>
-        <inertial>
-          <mass>1</mass>
-          <inertia>
-            <ixx>0.145833</ixx>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyy>0.145833</iyy>
-            <iyz>0</iyz>
-            <izz>0.125</izz>
-          </inertia>
-          <pose>0 0 0 0 -0 0</pose>
-        </inertial>
-        <collision name='collision'>
-          <geometry>
-            <cylinder>
-              <radius>0.500001</radius>
-              <length>0.599999</length>
-            </cylinder>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <bounce/>
-            <friction>
-              <torsional>
-                <ode/>
-              </torsional>
-              <ode/>
-            </friction>
-          </surface>
-        </collision>
-        <visual name='visual'>
-          <geometry>
-            <cylinder>
-              <radius>0.500001</radius>
-              <length>0.599999</length>
-            </cylinder>
-          </geometry>
-          <material>
-            <script>
-              <name>Gazebo/Wood</name>
-              <uri>file://media/materials/scripts/gazebo.material</uri>
-            </script>
-          </material>
-        </visual>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-      </link>
-    </model>
-    <model name="book_1">
-        <include>
-            <uri>model://aws_simulation/aws_robomaker_retail_BookD_01</uri>
-        </include>
-        <pose>4.87487 -2.42397 0.904482 0 0 -0.000004</pose>
-	</model>
-
-
-    <model name='small_bookshelf_2'>
-      <pose>2.96379 -6.89801 0.5 0 -0 0</pose>
-      <link name='link'>
-        <inertial>
-          <mass>1</mass>
-          <inertia>
-            <ixx>0.145833</ixx>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyy>0.145833</iyy>
-            <iyz>0</iyz>
-            <izz>0.125</izz>
-          </inertia>
-          <pose>0 0 0 0 -0 0</pose>
-        </inertial>
-        <collision name='collision'>
-          <geometry>
-            <cylinder>
-              <radius>0.500001</radius>
-              <length>0.599999</length>
-            </cylinder>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <bounce/>
-            <friction>
-              <torsional>
-                <ode/>
-              </torsional>
-              <ode/>
-            </friction>
-          </surface>
-        </collision>
-        <visual name='visual'>
-          <geometry>
-            <cylinder>
-              <radius>0.500001</radius>
-              <length>0.599999</length>
-            </cylinder>
-          </geometry>
-          <material>
-            <script>
-              <name>Gazebo/Wood</name>
-              <uri>file://media/materials/scripts/gazebo.material</uri>
-            </script>
-          </material>
-        </visual>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-      </link>
-    </model>
-    <model name="book_2">
-        <include>
-            <uri>model://aws_simulation/aws_robomaker_retail_BookD_01</uri>
-        </include>
-        <pose>6.16039 -1.34702 0.904482 0 0 -0.000004</pose>
-	</model>
-
-
-    <model name='small_bookshelf_3'>
-      <pose>2.96379 -6.89801 0.5 0 -0 0</pose>
-      <link name='link'>
-        <inertial>
-          <mass>1</mass>
-          <inertia>
-            <ixx>0.145833</ixx>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyy>0.145833</iyy>
-            <iyz>0</iyz>
-            <izz>0.125</izz>
-          </inertia>
-          <pose>0 0 0 0 -0 0</pose>
-        </inertial>
-        <collision name='collision'>
-          <geometry>
-            <cylinder>
-              <radius>0.500001</radius>
-              <length>0.599999</length>
-            </cylinder>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <bounce/>
-            <friction>
-              <torsional>
-                <ode/>
-              </torsional>
-              <ode/>
-            </friction>
-          </surface>
-        </collision>
-        <visual name='visual'>
-          <geometry>
-            <cylinder>
-              <radius>0.500001</radius>
-              <length>0.599999</length>
-            </cylinder>
-          </geometry>
-          <material>
-            <script>
-              <name>Gazebo/Wood</name>
-              <uri>file://media/materials/scripts/gazebo.material</uri>
-            </script>
-          </material>
-        </visual>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-      </link>
-    </model>
-    <model name="book_3">
-        <include>
-            <uri>model://aws_simulation/aws_robomaker_retail_BookD_01</uri>
-        </include>
-        <pose>5.81112 0.7632 0.904482 0 0 -0.000004</pose>
-	</model>
-
-
-    <model name='small_bookshelf_6'>
-      <pose>2.96379 -6.89801 0.5 0 -0 0</pose>
-      <link name='link'>
-        <inertial>
-          <mass>1</mass>
-          <inertia>
-            <ixx>0.145833</ixx>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyy>0.145833</iyy>
-            <iyz>0</iyz>
-            <izz>0.125</izz>
-          </inertia>
-          <pose>0 0 0 0 -0 0</pose>
-        </inertial>
-        <collision name='collision'>
-          <geometry>
-            <cylinder>
-              <radius>0.500001</radius>
-              <length>0.599999</length>
-            </cylinder>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <bounce/>
-            <friction>
-              <torsional>
-                <ode/>
-              </torsional>
-              <ode/>
-            </friction>
-          </surface>
-        </collision>
-        <visual name='visual'>
-          <geometry>
-            <cylinder>
-              <radius>0.500001</radius>
-              <length>0.599999</length>
-            </cylinder>
-          </geometry>
-          <material>
-            <script>
-              <name>Gazebo/Wood</name>
-              <uri>file://media/materials/scripts/gazebo.material</uri>
-            </script>
-          </material>
-        </visual>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-      </link>
-    </model>
-    <model name="book_6">
-        <include>
-            <uri>model://aws_simulation/aws_robomaker_retail_BookD_01</uri>
-        </include>
-        <pose>4.1555 -0.295494 0.904482 0 0 -0.000004</pose>
-	</model>
-
-
-    <model name="small_bookshelf_4">
-        <include>
-            <uri>model://aws_simulation/aws_robomaker_retail_BookshelfC_01</uri>
-        </include>
-        <pose>3.077725 1.978786 0 0 0 0</pose>
-	</model>
-    <model name="book_small_4">
-        <include>
-            <uri>model://aws_simulation/aws_robomaker_retail_BookF_01</uri>
-        </include>
-        <pose>3.077725 1.978786 0.804482 0 0 -0.000004</pose>
-	</model>
-
-    <model name="BookshelfB_01_001">
-        <include>
-            <uri>model://aws_simulation/aws_robomaker_retail_BookshelfB_01</uri>
-        </include>
-        <pose frame="">1.238722 -3.295747 -0.10347 0.003536 0.000025 -0.005208</pose>
-	</model>
-
-    <model name="BookshelfB_01_002">
-        <include>
-            <uri>model://aws_simulation/aws_robomaker_retail_BookshelfB_01</uri>
-        </include>
-        <pose frame="">3.919178 -3.295747 -0.10347 0.003536 0.000025 -0.005208</pose>
-	</model>
-
-    <model name="BookshelfB_01_003">
-        <include>
-            <uri>model://aws_simulation/aws_robomaker_retail_BookshelfB_01</uri>
-        </include>
-        <pose frame="">7.148451 -2.126921 -0.10347 -0.000047 -0.003535 1.586064</pose>
-	</model>
-
-    <model name="BookshelfB_01_004">
-        <include>
-            <uri>model://aws_simulation/aws_robomaker_retail_BookshelfB_01</uri>
-        </include>
-        <pose frame="">5.119833 3.302577 -0.10347 -0.003536 0.000006 -3.138313</pose>
-	</model>
     
-	<model name="DeskA_01_004">
-        <include>
-         <uri>model://aws_simulation/aws_robomaker_retail_DeskA_01</uri>
-        </include>
-        <pose frame="">2.583911 -0.213260 0.014866 0.000000 -0.000000 -1.576893</pose>
-	</model>
-    <model name="book_small_5">
-        <include>
-            <uri>model://aws_simulation/aws_robomaker_retail_BookF_01</uri>
-        </include>
-        <pose>2.590616 0.714569 0.804482 0 0 -0.000004</pose>
-	</model>
-    <model name="book_small_6">
-        <include>
-            <uri>model://aws_simulation/aws_robomaker_retail_BookD_02</uri>
-        </include>
-        <pose>2.590616 -0.724569 0.804482 0 0 -0.000004</pose>
-	</model>
-
-
-    <!--
     <model name='construction_cone_1'>
       <pose>2.96379 -6.89801 0.5 0 -0 0</pose>
       <link name='link'>
@@ -1112,8 +789,116 @@
         <kinematic>0</kinematic>
       </link>
     </model>
-
-
+    <model name='construction_cone_2'>
+      <pose>2.96379 -6.89801 0.5 0 -0 0</pose>
+      <link name='link'>
+        <inertial>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.145833</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.145833</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+          <pose>0 0 0 0 -0 0</pose>
+        </inertial>
+        <collision name='collision'>
+          <geometry>
+            <cylinder>
+              <radius>0.500001</radius>
+              <length>0.999999</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.500001</radius>
+              <length>0.999999</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Yellow</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name='construction_cone_3'>
+      <pose>2.96379 -6.89801 0.5 0 -0 0</pose>
+      <link name='link'>
+        <inertial>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.145833</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.145833</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+          <pose>0 0 0 0 -0 0</pose>
+        </inertial>
+        <collision name='collision'>
+          <geometry>
+            <cylinder>
+              <radius>0.500001</radius>
+              <length>0.999999</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.500001</radius>
+              <length>0.999999</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Yellow</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
     <model name='construction_cone_4'>
       <pose>2.96379 -6.89801 0.5 0 -0 0</pose>
       <link name='link'>
@@ -1169,8 +954,116 @@
         <kinematic>0</kinematic>
       </link>
     </model>
-
-
+    <model name='construction_cone_5'>
+     <pose>2.96379 -6.89801 0.5 0 -0 0</pose>
+      <link name='link'>
+        <inertial>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.145833</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.145833</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+          <pose>0 0 0 0 -0 0</pose>
+        </inertial>
+        <collision name='collision'>
+          <geometry>
+            <cylinder>
+              <radius>0.500001</radius>
+              <length>0.999999</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.500001</radius>
+              <length>0.999999</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Yellow</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name='construction_cone_6'>
+      <pose>2.96379 -6.89801 0.5 0 -0 0</pose>
+      <link name='link'>
+        <inertial>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.145833</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.145833</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+          <pose>0 0 0 0 -0 0</pose>
+        </inertial>
+        <collision name='collision'>
+          <geometry>
+            <cylinder>
+              <radius>0.500001</radius>
+              <length>0.999999</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.500001</radius>
+              <length>0.999999</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Yellow</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
     <model name='construction_cone_7'>
       <pose>2.96379 -6.89801 0.5 0 -0 0</pose>
       <link name='link'>
@@ -1649,6 +1542,6 @@
         <kinematic>0</kinematic>
       </link>
     </model>
-    -->
+
   </world>
 </sdf>
