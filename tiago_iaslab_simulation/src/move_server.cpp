@@ -7,8 +7,8 @@
 #include <std_msgs/UInt8.h>
 #include <tf2_ros/transform_listener.h>
 
+#include "tiago_iaslab_simulation/constant.h"
 #include "tiago_iaslab_simulation/scanObstacles.h"
-#include "tiago_iaslab_simulation/status_constant.h"
 
 MoveServer::MoveServer(std::shared_ptr<ros::NodeHandle> nodeHandle_,
                        std::string moveServerTopic,
@@ -38,40 +38,56 @@ void MoveServer::move(const tiago_iaslab_simulation::moveScanGoalConstPtr& goal)
 
   if (!timeout) {
     publishFeedback(status::FAILED);
+    ROS_INFO("boh1");
     actionServer.setAborted();
 
   } else {
     if (moveActionClient.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
       publishFeedback(status::ARRIVED);
 
-      if (scannerClient.exists()) {
-        tiago_iaslab_simulation::scanObstacles service;
-
-        publishFeedback(status::SCANNING);
-
-        if (scannerClient.call(service)) {
-          publishFeedback(status::DONE);
-
-          tiago_iaslab_simulation::moveScanResult result;
-          result.obstacles = service.response.obstacles;
-
-          actionServer.setSucceeded(result);
-
-        } else {
-          publishFeedback(status::FAILED);
-          actionServer.setAborted();
-        }
-
+      if (goal->scan) {
+        scan();
       } else {
-        publishFeedback(status::FAILED);
-        actionServer.setAborted();
+        actionServer.setSucceeded();
       }
 
     } else {
       publishFeedback(status::NOT_ARRIVED);
       publishFeedback(status::FAILED);
+      ROS_INFO("boh2");
+      auto b = moveActionClient.getResult();
+      ROS_INFO_STREAM(b);
       actionServer.setAborted();
     }
+  }
+}
+
+void MoveServer::scan() {
+  if (scannerClient.exists()) {
+    tiago_iaslab_simulation::scanObstacles service;
+
+    publishFeedback(status::SCANNING);
+
+    if (scannerClient.call(service)) {
+      publishFeedback(status::DONE);
+
+      tiago_iaslab_simulation::moveScanResult result;
+      result.obstacles = service.response.obstacles;
+
+      actionServer.setSucceeded(result);
+
+    } else {
+      publishFeedback(status::FAILED);
+      ROS_INFO("boh3");
+
+      actionServer.setAborted();
+    }
+
+  } else {
+    publishFeedback(status::FAILED);
+    ROS_INFO("boh4");
+
+    actionServer.setAborted();
   }
 }
 

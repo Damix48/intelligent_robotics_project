@@ -18,6 +18,10 @@ find_package(catkin REQUIRED
   tf2_geometry_msgs
   move_base_msgs
   costmap_2d
+  moveit_core
+  moveit_ros_planning
+  moveit_ros_planning_interface
+  apriltag_ros
 )
 
 # # System dependencies are found with CMake's conventions
@@ -53,17 +57,17 @@ find_package(catkin REQUIRED
 # #   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 # # Generate messages in the 'msg' folder
-# add_message_files(
-# FILES
-# Message1.msg
-# Message2.msg
-# )
+add_message_files(
+  FILES
+  circle.msg
+)
 
 # # Generate services in the 'srv' folder
 add_service_files(
   FILES
   scanObstacles.srv
   Objs.srv
+  apriltagDetections.srv
 )
 
 # # Generate actions in the 'action' folder
@@ -173,60 +177,6 @@ target_link_libraries(
   ${PROJECT_NAME}_human
 )
 
-# ############
-# # Install ##
-# ############
-
-# all install targets should use catkin DESTINATION variables
-# See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
-
-# # Mark executable scripts (Python etc.) for installation
-# # in contrast to setup.py, you can choose the destination
-# catkin_install_python(PROGRAMS
-# scripts/my_python_script
-# DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
-
-# # Mark executables for installation
-# # See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
-# install(TARGETS ${PROJECT_NAME}_node
-# RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
-
-# # Mark libraries for installation
-# # See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_libraries.html
-# install(TARGETS ${PROJECT_NAME}
-# ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-# LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-# RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
-# )
-
-# # Mark cpp header files for installation
-# install(DIRECTORY include/${PROJECT_NAME}/
-# DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-# FILES_MATCHING PATTERN "*.h"
-# PATTERN ".svn" EXCLUDE
-# )
-
-# # Mark other files for installation (e.g. launch and bag files, etc.)
-# install(FILES
-# # myfile1
-# # myfile2
-# DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-# )
-
-# ############
-# # Testing ##
-# ############
-
-# # Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_tiago_iaslab_simulation.cpp)
-# if(TARGET ${PROJECT_NAME}-test)
-# target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
-# endif()
-
-# # Add folders to be run by python nosetests
-# catkin_add_nosetests(test)
 add_library(client_lib src/client.cpp)
 add_library(move_server_lib src/move_server.cpp)
 add_library(corridor_server_lib src/corridor_server.cpp)
@@ -234,12 +184,18 @@ add_library(scanner_server_lib src/scanner_server.cpp)
 add_library(utils_lib src/utils.cpp)
 add_library(map_lib src/map.cpp)
 add_library(point_lib src/point.cpp)
+add_library(object_lib src/object.cpp)
+add_library(robot_lib src/robot.cpp)
+add_library(apriltag_poses_lib src/ApriltagPoses.cpp)
 
 add_executable(client_node client_node.cpp)
 add_executable(move_node move_node.cpp)
 add_executable(corridor_node corridor_node.cpp)
 add_executable(scanner_node scanner_node.cpp)
+add_executable(robot_node src/nodes/robot_node.cpp)
+add_executable(node_b src/nodes/nodeB.cpp)
 
+# # LIBRARIES ##
 target_link_libraries(
   client_lib
   utils_lib
@@ -252,6 +208,24 @@ target_link_libraries(
   ${catkin_LIBRARIES}
 )
 
+target_link_libraries(
+  object_lib
+  utils_lib
+  ${catkin_LIBRARIES}
+)
+
+target_link_libraries(
+  robot_lib
+  client_lib
+  ${catkin_LIBRARIES}
+)
+
+target_link_libraries(
+  apriltag_poses_lib
+  ${catkin_LIBRARIES}
+)
+
+# # EXECUTABLE ##
 target_link_libraries(
   client_node
   client_lib
@@ -278,6 +252,19 @@ target_link_libraries(
   ${catkin_LIBRARIES}
 )
 
+target_link_libraries(
+  robot_node
+  robot_lib
+  object_lib
+  ${catkin_LIBRARIES}
+)
+
+target_link_libraries(
+  node_b
+  apriltag_poses_lib
+  ${catkin_LIBRARIES}
+)
+
 add_dependencies(client_lib tiago_iaslab_simulation_generate_messages_cpp)
 add_dependencies(move_server_lib tiago_iaslab_simulation_generate_messages_cpp)
 add_dependencies(scanner_server_lib tiago_iaslab_simulation_generate_messages_cpp)
@@ -286,3 +273,5 @@ add_dependencies(client_node ${tiago_iaslab_simulation_EXPORTED_TARGETS})
 add_dependencies(move_node ${tiago_iaslab_simulation_EXPORTED_TARGETS})
 add_dependencies(corridor_node ${tiago_iaslab_simulation_EXPORTED_TARGETS})
 add_dependencies(scanner_node ${tiago_iaslab_simulation_EXPORTED_TARGETS})
+add_dependencies(robot_node ${tiago_iaslab_simulation_EXPORTED_TARGETS})
+add_dependencies(node_b ${tiago_iaslab_simulation_EXPORTED_TARGETS})

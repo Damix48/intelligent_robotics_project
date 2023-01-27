@@ -6,6 +6,7 @@
 #include <ros/service_server.h>
 #include <sensor_msgs/LaserScan.h>
 
+#include "tiago_iaslab_simulation/circle.h"
 #include "tiago_iaslab_simulation/scanObstacles.h"
 
 class ScannerServer {
@@ -28,8 +29,8 @@ class ScannerServer {
 
   /// @brief Returns a vector with the estimated coordinates of the center of the cylindrical obstacles starting from laser scans.
   /// @param laserScan
-  /// @return \c std::vector of \c geometry_msgs::PointStamped with the position of the obstacles
-  std::vector<geometry_msgs::PointStamped> getObstaclesPosition(const sensor_msgs::LaserScan laserScan);
+  /// @return \c std::vector of \c tiago_iaslab_simulation::circle with the position and radius of the obstacles
+  std::vector<tiago_iaslab_simulation::circle> getObstaclesPosition(const sensor_msgs::LaserScan laserScan);
 
   /// @brief Check if a set of points can represent a circle basing on a threshold on the value of radius. It compute radius and center of the circle with the equation of a circle through 3 points.
   /// @param points
@@ -57,7 +58,7 @@ class ScannerServer {
                 float radialDistanceThreshold_ = 0.5,
                 int clusterMinSize_ = 10,
                 float minRadius_ = 0.15,
-                float maxRadius_ = 0.2);
+                float maxRadius_ = 0.23);
 };
 
 #endif  // TIAGO_IASLAB_SIMULATION_SCANNER_SERVER_H

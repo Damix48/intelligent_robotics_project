@@ -1,10 +1,11 @@
 # goal definition
 Header goal_header
 geometry_msgs/PoseStamped pose
+bool scan
 ---
 # result definition
 Header result_header
-geometry_msgs/PointStamped[] obstacles
+tiago_iaslab_simulation/circle[] obstacles
 ---
 # feedback
 Header feedback_header

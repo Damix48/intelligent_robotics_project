@@ -9,7 +9,7 @@
 #include <std_msgs/UInt8.h>
 
 #include "tiago_iaslab_simulation/point.h"
-#include "tiago_iaslab_simulation/status_constant.h"
+#include "tiago_iaslab_simulation/constant.h"
 
 CorridorServer::CorridorServer(std::shared_ptr<ros::NodeHandle> nodeHandle_,
                                float maxCorridorWidth_,

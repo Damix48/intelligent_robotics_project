@@ -25,6 +25,8 @@ class MoveServer {
   /// @brief Callback for the action server execution.
   /// @param goal
   void move(const tiago_iaslab_simulation::moveScanGoalConstPtr& goal);
+  /// @brief Scan for obstacles.
+  void scan();
 
   /// @brief Publish the feedback, the status of the task.
   /// @param status

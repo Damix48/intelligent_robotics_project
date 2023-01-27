@@ -2,34 +2,45 @@
 
 #include <visualization_msgs/Marker.h>
 
+#include "tiago_iaslab_simulation/circle.h"
+#include "tiago_iaslab_simulation/constant.h"
 #include "tiago_iaslab_simulation/moveScanAction.h"
-#include "tiago_iaslab_simulation/status_constant.h"
 #include "tiago_iaslab_simulation/utils.h"
 
 Client::Client(std::shared_ptr<ros::NodeHandle> nodeHandle_,
+               bool print_,
                std::string moveServerTopic,
                std::string visualizerTopic) : nodeHandle(nodeHandle_),
-                                              actionClient(moveServerTopic) {
+                                              actionClient(moveServerTopic),
+                                              print(print_) {
   visualizer = nodeHandle->advertise<visualization_msgs::Marker>(visualizerTopic, 1);
 }
 
 void Client::doneCallback(const actionlib::SimpleClientGoalState& state,
                           const tiago_iaslab_simulation::moveScanResultConstPtr& result) {
+  obstacles = result->obstacles;
+
+  if (!print) {
+    return;
+  }
+
   if (state == actionlib::SimpleClientGoalState::SUCCEEDED) {
     ROS_INFO("There are %i obstacles.", result->obstacles.size());
 
-    for (size_t i = 0; i < result->obstacles.size(); i++) {
-      ROS_INFO("Obstacle found in (x, y) = (%f, %f).", result->obstacles[i].point.x, result->obstacles[i].point.y);
+    for (size_t i = 0; i < obstacles.size(); i++) {
+      tiago_iaslab_simulation::circle obstacle = obstacles[i];
+
+      ROS_INFO("Obstacle found in (x, y) = (%f, %f).", obstacle.center.point.x, obstacle.center.point.y);
 
       visualization_msgs::Marker center;
 
       center.action = center.ADD;
-      center.header = result->obstacles[i].header;
+      center.header = obstacle.center.header;
       center.ns = "centers";
       center.id = i;
       center.type = center.SPHERE;
 
-      center.pose.position = result->obstacles[i].point;
+      center.pose.position = obstacle.center.point;
 
       center.scale.x = 0.1;
       center.scale.y = 0.1;
@@ -51,6 +62,10 @@ void Client::doneCallback(const actionlib::SimpleClientGoalState& state,
 }
 
 void Client::feedbackCallback(const tiago_iaslab_simulation::moveScanFeedbackConstPtr& feedback) {
+  if (!print) {
+    return;
+  }
+
   switch (feedback->current_status) {
     case status::READY:
       ROS_INFO("The move server is ready.");
@@ -90,14 +105,23 @@ void Client::feedbackCallback(const tiago_iaslab_simulation::moveScanFeedbackCon
   }
 }
 
-void Client::sendPose(float x, float y, float yaw) {
+bool Client::moveTo(float x, float y, float yaw, bool scan) {
+  geometry_msgs::PoseStamped pose;
+
+  pose.header.frame_id = "map";
+  pose.header.stamp = ros::Time::now();
+  pose.pose = iaslab::createPose(x, y, yaw);
+
+  return moveTo(pose, scan);
+}
+
+bool Client::moveTo(geometry_msgs::PoseStamped pose, bool scan) {
   actionClient.waitForServer();
 
   tiago_iaslab_simulation::moveScanGoal goal;
 
-  goal.pose.header.frame_id = "map";
-  goal.pose.header.stamp = ros::Time::now();
-  goal.pose.pose = iaslab::createPose(x, y, yaw);
+  goal.pose = pose;
+  goal.scan = scan;
 
   actionClient.sendGoal(goal,
                         boost::bind(&Client::doneCallback, this, _1, _2),
@@ -105,4 +129,10 @@ void Client::sendPose(float x, float y, float yaw) {
                         boost::bind(&Client::feedbackCallback, this, _1));
 
   actionClient.waitForResult();
+
+  return actionClient.getState() == actionlib::SimpleClientGoalState::SUCCEEDED;
+}
+
+std::vector<tiago_iaslab_simulation::circle> Client::getObstacles() const {
+  return obstacles;
 }

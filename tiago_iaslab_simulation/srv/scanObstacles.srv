@@ -1,4 +1,4 @@
 Header request_header
 ---
 Header response_header
-geometry_msgs/PointStamped[] obstacles
+tiago_iaslab_simulation/circle[] obstacles

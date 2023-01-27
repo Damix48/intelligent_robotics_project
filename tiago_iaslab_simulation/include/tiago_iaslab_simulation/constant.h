@@ -1,5 +1,5 @@
-#ifndef STATUS_CONSTANT_H
-#define STATUS_CONSTANT_H
+#ifndef TIAGO_IASLAB_SIMULATION_CONSTANT_H
+#define TIAGO_IASLAB_SIMULATION_CONSTANT_H
 
 namespace status {
 
@@ -14,4 +14,4 @@ static const unsigned int FAILED = 7;
 
 }  // namespace status
 
-#endif  // STATUS_CONSTANT_H
+#endif  // TIAGO_IASLAB_SIMULATION_CONSTANT_H

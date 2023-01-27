@@ -3,6 +3,7 @@
 #include <ros/topic.h>
 #include <sensor_msgs/LaserScan.h>
 
+#include "tiago_iaslab_simulation/circle.h"
 #include "tiago_iaslab_simulation/point.h"
 
 ScannerServer::ScannerServer(std::shared_ptr<ros::NodeHandle> nodeHandle_,
@@ -28,7 +29,7 @@ bool ScannerServer::sendObstacles(tiago_iaslab_simulation::scanObstaclesRequest 
   return true;
 }
 
-std::vector<geometry_msgs::PointStamped> ScannerServer::getObstaclesPosition(const sensor_msgs::LaserScan laserScan) {
+std::vector<tiago_iaslab_simulation::circle> ScannerServer::getObstaclesPosition(const sensor_msgs::LaserScan laserScan) {
   std::vector<std::vector<geometry_msgs::PointStamped>> clusters;
   std::vector<float> ranges = laserScan.ranges;
   float range_min = laserScan.range_min;
@@ -70,16 +71,24 @@ std::vector<geometry_msgs::PointStamped> ScannerServer::getObstaclesPosition(con
   // remove small clusters
   std::vector<std::vector<geometry_msgs::PointStamped>> clusters2 = removeSmallClusters(clusters);
 
+  // ROS_INFO_STREAM(clusters2.size())
+
   // for each cluster find if a circle fits
-  std::vector<geometry_msgs::PointStamped> obstacles;
+  std::vector<tiago_iaslab_simulation::circle> obstacles;
   for (int i = 0; i < clusters2.size(); i++) {
     float r;
     geometry_msgs::PointStamped c;
+    tiago_iaslab_simulation::circle circle;
+
     if (isCircle(clusters2[i], r, c)) {
       c.header.frame_id = laserScan.header.frame_id;
       c.header.stamp = laserScan.header.stamp;
       c.header.seq = i;
-      obstacles.push_back(c);
+
+      circle.center = c;
+      circle.radius = r;
+
+      obstacles.push_back(circle);
     }
   }
 

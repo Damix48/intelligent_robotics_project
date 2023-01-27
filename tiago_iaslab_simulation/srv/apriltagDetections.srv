@@ -1,0 +1,5 @@
+Header request_header
+---
+Header response_header
+int32[] ids 
+geometry_msgs/PoseWithCovarianceStamped[] poses

@@ -1,0 +1,50 @@
+pick_waypoint:
+  x: 8.55
+  y: 0
+  yaw: 0
+
+place_waypoint:
+  x: 1
+  y: 2
+  yaw: 0
+
+approach_distance: 0.05 #in cm
+
+objects_to_pick:
+  - id: 1
+    name: blue_hexagon #?? serve?
+    shape: cilinder
+    pick_mode: side
+    robot_pick_pose:
+      x: 8
+      y: -1.5
+      yaw: -1.57
+    place_pose:
+      x: 1.4
+      y: 23
+
+  - id: 2
+    name: green_triangle #?? serve?
+    shape: cube
+    pick_mode: top
+    robot_pick_pose:
+      x: 7.8
+      y: -3.95
+      yaw: 1.57
+    auto_place: True
+    place_pose:
+      x: 0
+      y: 0
+
+  - id: 3
+    name: red_cube #?? serve?
+    shape: cube
+    pick_mode: top
+    robot_pick_pose:
+      x: 7.5
+      y: -2
+      yaw: -1.57
+    auto_place: True
+    place_pose:
+      x: 0
+      y: 0

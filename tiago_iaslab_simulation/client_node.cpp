@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
   auto nh_ptr = std::make_shared<ros::NodeHandle>();
 
   Client client(nh_ptr);
-  client.sendPose(x_, y_, yaw_);
+  client.moveTo(x_, y_, yaw_);
 
   ros::spin();
 
