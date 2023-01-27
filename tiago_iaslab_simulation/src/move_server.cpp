@@ -38,7 +38,6 @@ void MoveServer::move(const tiago_iaslab_simulation::moveScanGoalConstPtr& goal)
 
   if (!timeout) {
     publishFeedback(status::FAILED);
-    ROS_INFO("boh1");
     actionServer.setAborted();
 
   } else {
@@ -54,9 +53,6 @@ void MoveServer::move(const tiago_iaslab_simulation::moveScanGoalConstPtr& goal)
     } else {
       publishFeedback(status::NOT_ARRIVED);
       publishFeedback(status::FAILED);
-      ROS_INFO("boh2");
-      auto b = moveActionClient.getResult();
-      ROS_INFO_STREAM(b);
       actionServer.setAborted();
     }
   }
@@ -78,14 +74,12 @@ void MoveServer::scan() {
 
     } else {
       publishFeedback(status::FAILED);
-      ROS_INFO("boh3");
 
       actionServer.setAborted();
     }
 
   } else {
     publishFeedback(status::FAILED);
-    ROS_INFO("boh4");
 
     actionServer.setAborted();
   }
