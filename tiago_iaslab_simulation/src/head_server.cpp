@@ -22,7 +22,7 @@ HeadServer::HeadServer(std::shared_ptr<ros::NodeHandle> nodeHandle_,
 void HeadServer::move(const tiago_iaslab_simulation::headGoalConstPtr& goal) {
   headController.waitForServer();
 
-  control_msgs::FollowJointTrajectoryGoal trajectoryGoal = generateTrajectoryGoal(goal->pitch, goal->yaw);
+  control_msgs::FollowJointTrajectoryGoal trajectoryGoal = generateHeadTrajectoryGoal(goal->pitch, goal->yaw);
 
   headController.sendGoal(trajectoryGoal);
 
@@ -64,7 +64,7 @@ void HeadServer::getObjects() {
   actionServer.setSucceeded(result);
 }
 
-control_msgs::FollowJointTrajectoryGoal HeadServer::generateTrajectoryGoal(float pitch, float yaw) {
+control_msgs::FollowJointTrajectoryGoal HeadServer::generateHeadTrajectoryGoal(float pitch, float yaw) {
   control_msgs::FollowJointTrajectoryGoal headGoal;
 
   headGoal.trajectory.joint_names = headJointNames;
