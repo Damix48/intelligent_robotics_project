@@ -1,0 +1,13 @@
+# goal definition
+Header goal_header
+float32 pitch
+float32 yaw
+bool return_object
+---
+# result definition
+Header result_header
+apriltag_ros/AprilTagDetection[] tags
+---
+# feedback
+Header feedback_header
+uint8 current_status
