@@ -9,8 +9,14 @@
 
 namespace iaslab {
 
+struct EulerAngles {
+  float roll, pitch, yaw;
+};
+
 geometry_msgs::Pose createPose(geometry_msgs::Point point_, float yaw_);
 geometry_msgs::Pose createPose(float x_, float y_, float yaw_);
+
+EulerAngles convertToEulerAngles(geometry_msgs::Quaternion quaternion_);
 
 }  // namespace iaslab
 

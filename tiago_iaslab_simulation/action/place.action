@@ -1,0 +1,15 @@
+# goal definition
+Header goal_header
+int32 id
+string name
+float32 height
+geometry_msgs/Pose pose
+uint8 pick_mode
+---
+# result definition
+Header result_header
+uint8 boh
+---
+# feedback
+Header feedback_header
+uint8 current_status

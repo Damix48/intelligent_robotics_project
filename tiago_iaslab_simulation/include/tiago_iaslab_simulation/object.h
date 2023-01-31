@@ -1,17 +1,34 @@
-#ifndef OBJECT_H
-#define OBJECT_H
+#ifndef TIAGO_IASLAB_SIMULATION_OBJECT_H
+#define TIAGO_IASLAB_SIMULATION_OBJECT_H
 
 #include <XmlRpcValue.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/Vector3.h>
+
+namespace ObjectConstant {
+
+enum PICK_MODE {
+  TOP = 0,
+  SIDE = 1
+};
+
+enum SHAPE {
+  CUBE = 0,
+  CYLINDER = 1
+};
+
+}  // namespace ObjectConstant
 
 class Object {
  private:
-  enum PICK_MODE { TOP = 0,
-                   SIDE = 1 };
   int id;
   std::string name;
 
-  PICK_MODE pickMode;
+  ObjectConstant::PICK_MODE pickMode;
+  ObjectConstant::SHAPE shape;
+  geometry_msgs::Vector3 color;
+  std::vector<float> dimensions;
+  float offset;
 
   geometry_msgs::PoseStamped robotPickPose;
 
@@ -25,8 +42,14 @@ class Object {
 
   const int getId() const;
   const std::string getName() const;
-  const PICK_MODE getPickMode() const;
+  const ObjectConstant::PICK_MODE getPickMode() const;
+  const ObjectConstant::SHAPE getShape() const;
+  const geometry_msgs::Vector3 getColor() const;
+  std::vector<float> getDimensions() const;
+  float getOffset() const;
   const geometry_msgs::PoseStamped getRobotPickPose() const;
+  const bool getRobotPlaceAuto() const;
+  const geometry_msgs::PoseStamped getPlacePosition() const;
 };
 
-#endif  // OBJECT_H
+#endif  // TIAGO_IASLAB_SIMULATION_OBJECT_H

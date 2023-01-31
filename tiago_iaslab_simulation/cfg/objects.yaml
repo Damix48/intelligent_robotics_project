@@ -1,50 +1,91 @@
 pick_waypoint:
   x: 8.55
-  y: 0
-  yaw: 0
+  y: -1.5
+  yaw: -1.37
 
 place_waypoint:
-  x: 1
-  y: 2
-  yaw: 0
+  x: 11
+  y: -2
+  yaw: 1.37
 
-approach_distance: 0.05 #in cm
+pick_table_dimensions:
+  - 3 # length
+  - 1 # width
+  - 0.1 # height
+  - 0.75 # z
+  - 0.85 # distance from robot
+
+obstacle_dimensions:
+  - 0.25
+  - 0.07
+
+place_table_dimensions:
+  - 0.70
+  - 0.25
 
 objects_to_pick:
   - id: 1
-    name: blue_hexagon #?? serve?
-    shape: cilinder
-    pick_mode: side
+    name: Hexagon
+    shape: cylinder
+    color:
+      - 150
+      - 0
+      - 0
+    dimensions:
+      - 0.1
+      - 0.025
+    pick_mode: top
     robot_pick_pose:
-      x: 8
-      y: -1.5
+      x: 7.9
+      y: -2
       yaw: -1.57
+    auto_place: true
     place_pose:
-      x: 1.4
-      y: 23
+      x: 12.5
+      y: -0.33
+      yaw: 1.57
 
   - id: 2
-    name: green_triangle #?? serve?
+    name: Triangle
     shape: cube
+    color:
+      - 0
+      - 150
+      - 0
+    dimensions:
+      - 0.07
+      - 0.07
+      - 0.07
+    offset: 0.04
     pick_mode: top
     robot_pick_pose:
       x: 7.8
       y: -3.95
       yaw: 1.57
-    auto_place: True
+    auto_place: true
     place_pose:
-      x: 0
-      y: 0
+      x: 11.5
+      y: -0.33
+      yaw: 1.57
 
   - id: 3
-    name: red_cube #?? serve?
+    name: cube
     shape: cube
+    color:
+      - 0
+      - 0
+      - 150
+    dimensions:
+      - 0.07
+      - 0.07
+      - 0.07
     pick_mode: top
     robot_pick_pose:
-      x: 7.5
+      x: 7.65
       y: -2
       yaw: -1.57
-    auto_place: True
+    auto_place: true
     place_pose:
-      x: 0
-      y: 0
+      x: 10.5
+      y: -0.33
+      yaw: 1.57

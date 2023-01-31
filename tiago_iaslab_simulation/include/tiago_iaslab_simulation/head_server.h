@@ -13,14 +13,17 @@ class HeadServer {
 
   actionlib::SimpleActionServer<tiago_iaslab_simulation::headAction> actionServer;
   actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction> headController;
+  actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction> torsoController;
 
   std::vector<std::string> headJointNames;
+  std::vector<std::string> torsoJointNames;
   std::string apriltagTopic;
   std::string baseFrame;
 
   void move(const tiago_iaslab_simulation::headGoalConstPtr& goal);
   void getObjects();
   control_msgs::FollowJointTrajectoryGoal generateHeadTrajectoryGoal(float pitch, float yaw);
+  control_msgs::FollowJointTrajectoryGoal generateTorsoTrajectoryGoal(float v);
 
   void publishFeedback(const uint status);
 
@@ -29,6 +32,8 @@ class HeadServer {
              std::string headServerTopic = "head_server",
              std::string headControllerTopic = "head_controller/follow_joint_trajectory",
              std::vector<std::string> headJointNames_ = {"head_1_joint", "head_2_joint"},
+             std::string torsoControllerTopic = "torso_controller/follow_joint_trajectory",
+             std::vector<std::string> torsoJointNames_ = {"torso_lift_joint"},
              std::string apriltagTopic_ = "tag_detections",
              std::string baseFrame_ = "base_footprint");
 };

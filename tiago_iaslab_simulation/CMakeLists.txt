@@ -22,6 +22,7 @@ find_package(catkin REQUIRED
   moveit_ros_planning
   moveit_ros_planning_interface
   apriltag_ros
+  control_msgs
 )
 
 # # System dependencies are found with CMake's conventions
@@ -68,12 +69,16 @@ add_service_files(
   scanObstacles.srv
   Objs.srv
   apriltagDetections.srv
+  Colors.srv
 )
 
 # # Generate actions in the 'action' folder
 add_action_files(
   FILES
   moveScan.action
+  head.action
+  pick.action
+  place.action
 )
 
 # # Generate added messages and services with any dependencies listed here
@@ -82,6 +87,7 @@ generate_messages(
   actionlib_msgs
   std_msgs
   geometry_msgs
+  apriltag_ros
 )
 
 # ###############################################
@@ -177,28 +183,52 @@ target_link_libraries(
   ${PROJECT_NAME}_human
 )
 
-add_library(client_lib src/client.cpp)
 add_library(move_server_lib src/move_server.cpp)
+add_library(move_client_lib src/move_client.cpp)
+add_library(head_server_lib src/head_server.cpp)
+add_library(head_client_lib src/head_client.cpp)
+add_library(arm_server_lib src/arm_server.cpp)
+add_library(arm_client_lib src/arm_client.cpp)
+add_library(find_color_server_lib src/find_color_server.cpp)
+add_library(find_color_client_lib src/find_color_client.cpp)
+
+add_library(robot_lib src/robot.cpp)
+
 add_library(corridor_server_lib src/corridor_server.cpp)
 add_library(scanner_server_lib src/scanner_server.cpp)
+
 add_library(utils_lib src/utils.cpp)
 add_library(map_lib src/map.cpp)
 add_library(point_lib src/point.cpp)
 add_library(object_lib src/object.cpp)
-add_library(robot_lib src/robot.cpp)
-add_library(apriltag_poses_lib src/ApriltagPoses.cpp)
+add_library(planning_helper_lib src/planning_helper.cpp)
 
 add_executable(client_node client_node.cpp)
 add_executable(move_node move_node.cpp)
 add_executable(corridor_node corridor_node.cpp)
 add_executable(scanner_node scanner_node.cpp)
 add_executable(robot_node src/nodes/robot_node.cpp)
-add_executable(node_b src/nodes/nodeB.cpp)
+add_executable(head_node src/nodes/head_node.cpp)
+add_executable(arm_node src/nodes/arm_node.cpp)
+add_executable(find_color_node src/nodes/find_color_node.cpp)
 
 # # LIBRARIES ##
 target_link_libraries(
-  client_lib
+  move_client_lib
   utils_lib
+  ${catkin_LIBRARIES}
+)
+
+target_link_libraries(
+  arm_server_lib
+  utils_lib
+  planning_helper_lib
+  ${catkin_LIBRARIES}
+)
+
+target_link_libraries(
+  find_color_client_lib
+  head_client_lib
   ${catkin_LIBRARIES}
 )
 
@@ -215,20 +245,27 @@ target_link_libraries(
 )
 
 target_link_libraries(
-  robot_lib
-  client_lib
+  planning_helper_lib
+  utils_lib
+  object_lib
   ${catkin_LIBRARIES}
 )
 
 target_link_libraries(
-  apriltag_poses_lib
+  robot_lib
+  move_client_lib
+  head_client_lib
+  arm_client_lib
+  planning_helper_lib
+  find_color_client_lib
+  utils_lib
   ${catkin_LIBRARIES}
 )
 
 # # EXECUTABLE ##
 target_link_libraries(
   client_node
-  client_lib
+  move_client_lib
   map_lib
   ${catkin_LIBRARIES}
 )
@@ -260,13 +297,31 @@ target_link_libraries(
 )
 
 target_link_libraries(
-  node_b
-  apriltag_poses_lib
+  head_node
+  head_server_lib
   ${catkin_LIBRARIES}
 )
 
-add_dependencies(client_lib tiago_iaslab_simulation_generate_messages_cpp)
+target_link_libraries(
+  arm_node
+  arm_server_lib
+  ${catkin_LIBRARIES}
+)
+
+target_link_libraries(
+  find_color_node
+  find_color_server_lib
+  ${catkin_LIBRARIES}
+)
+
+add_dependencies(move_client_lib tiago_iaslab_simulation_generate_messages_cpp)
 add_dependencies(move_server_lib tiago_iaslab_simulation_generate_messages_cpp)
+add_dependencies(head_client_lib tiago_iaslab_simulation_generate_messages_cpp)
+add_dependencies(head_server_lib tiago_iaslab_simulation_generate_messages_cpp)
+add_dependencies(arm_client_lib tiago_iaslab_simulation_generate_messages_cpp)
+add_dependencies(arm_server_lib tiago_iaslab_simulation_generate_messages_cpp)
+add_dependencies(find_color_server_lib tiago_iaslab_simulation_generate_messages_cpp)
+add_dependencies(find_color_client_lib tiago_iaslab_simulation_generate_messages_cpp)
 add_dependencies(scanner_server_lib tiago_iaslab_simulation_generate_messages_cpp)
 
 add_dependencies(client_node ${tiago_iaslab_simulation_EXPORTED_TARGETS})
@@ -274,4 +329,6 @@ add_dependencies(move_node ${tiago_iaslab_simulation_EXPORTED_TARGETS})
 add_dependencies(corridor_node ${tiago_iaslab_simulation_EXPORTED_TARGETS})
 add_dependencies(scanner_node ${tiago_iaslab_simulation_EXPORTED_TARGETS})
 add_dependencies(robot_node ${tiago_iaslab_simulation_EXPORTED_TARGETS})
-add_dependencies(node_b ${tiago_iaslab_simulation_EXPORTED_TARGETS})
+add_dependencies(head_node ${tiago_iaslab_simulation_EXPORTED_TARGETS})
+add_dependencies(arm_node ${tiago_iaslab_simulation_EXPORTED_TARGETS})
+add_dependencies(find_color_node ${tiago_iaslab_simulation_EXPORTED_TARGETS})

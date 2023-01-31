@@ -1,6 +1,6 @@
 #include <ros/ros.h>
 
-#include "tiago_iaslab_simulation/client.h"
+#include "tiago_iaslab_simulation/move_client.h"
 #include "tiago_iaslab_simulation/map2d.h"
 
 int main(int argc, char** argv) {
@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 
   auto nh_ptr = std::make_shared<ros::NodeHandle>();
 
-  Client client(nh_ptr);
+  MoveClient client(nh_ptr);
   client.moveTo(x_, y_, yaw_);
 
   ros::spin();

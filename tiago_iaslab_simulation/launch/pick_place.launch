@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="corridor" default="false" />
+
+  <rosparam command="load" file="$(find tiago_iaslab_simulation)/cfg/objects.yaml" />
+
+  <node name="move_node_1" pkg="tiago_iaslab_simulation" type="move_node" output="screen" />
+  <node name="head_node_1" pkg="tiago_iaslab_simulation" type="head_node" output="screen" />
+  <node name="arm_node_1" pkg="tiago_iaslab_simulation" type="arm_node" output="screen" />
+  <node name="find_color_node_1" pkg="tiago_iaslab_simulation" type="find_color_node"
+    output="screen" args="50 100" />
+  <node name="scanner_node_1" pkg="tiago_iaslab_simulation" type="scanner_node" output="screen" />
+  <node name="corridor_node_1" pkg="tiago_iaslab_simulation" type="corridor_node"
+    if="$(arg corridor)" output="screen" />
+  <node name="human_node_1" pkg="tiago_iaslab_simulation" type="human_node" output="screen" />
+
+  <node name="robot_node_1" pkg="tiago_iaslab_simulation" type="robot_node" output="screen" />
+
+</launch>

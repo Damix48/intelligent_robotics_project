@@ -1,0 +1,6 @@
+Header request_header
+tiago_iaslab_simulation/circle scan
+geometry_msgs/Vector3 target_color
+---
+Header response_header
+bool found

@@ -8,8 +8,8 @@
 #include <std_msgs/Bool.h>
 #include <std_msgs/UInt8.h>
 
-#include "tiago_iaslab_simulation/point.h"
 #include "tiago_iaslab_simulation/constant.h"
+#include "tiago_iaslab_simulation/point.h"
 
 CorridorServer::CorridorServer(std::shared_ptr<ros::NodeHandle> nodeHandle_,
                                float maxCorridorWidth_,
@@ -55,10 +55,15 @@ void CorridorServer::stop() {
 void CorridorServer::scannerCallback(const sensor_msgs::LaserScanConstPtr& msg) {
   float distanceRight = msg->ranges[66];
   float distanceLeft = msg->ranges[msg->ranges.size() - 66];
+  float distanceFrontalRight = msg->ranges[191];
+  float distanceFrontalLeft = msg->ranges[msg->ranges.size() - 191];
 
   if (distanceRight + distanceLeft < maxCorridorWidth) {
     togglePauseNavigation(true);
     move(distanceRight, distanceLeft);
+  } else if (distanceFrontalRight + distanceFrontalLeft < maxCorridorWidth && distanceFrontalRight > 0.2 * maxCorridorWidth && distanceFrontalLeft > 0.2 * maxCorridorWidth) {
+    togglePauseNavigation(true);
+    move(distanceFrontalRight, distanceFrontalLeft);
   } else {
     togglePauseNavigation(false);
   }
@@ -84,8 +89,8 @@ void CorridorServer::togglePauseNavigation(bool pauseNavigation_) {
 
 void CorridorServer::move(float distanceRight_, float distanceLeft_) {
   geometry_msgs::Twist vel;
-  vel.linear.x = 0.5;
-  vel.angular.z = 0.5 * -(distanceRight_ - distanceLeft_);
+  vel.linear.x = 0.2;
+  vel.angular.z = 0.7 * -(distanceRight_ - distanceLeft_);
 
   cmdVel.publish(vel);
 }

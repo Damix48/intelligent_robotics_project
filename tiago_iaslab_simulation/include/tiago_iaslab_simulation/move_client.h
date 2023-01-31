@@ -1,5 +1,5 @@
-#ifndef CLIENT_H
-#define CLIENT_H
+#ifndef TIAGO_IASLAB_SIMULATION_MOVE_CLIENT_H
+#define TIAGO_IASLAB_SIMULATION_MOVE_CLIENT_H
 
 #include <actionlib/client/simple_action_client.h>
 #include <ros/node_handle.h>
@@ -8,7 +8,7 @@
 #include "tiago_iaslab_simulation/circle.h"
 #include "tiago_iaslab_simulation/moveScanAction.h"
 
-class Client {
+class MoveClient {
  private:
   std::vector<tiago_iaslab_simulation::circle> obstacles;
 
@@ -33,7 +33,7 @@ class Client {
   /// @param nodeHandle_
   /// @param moveServerTopic topic for send the goal to #MoveServer action
   /// @param visualizerTopic topic for publish the marker of centers
-  Client(std::shared_ptr<ros::NodeHandle> nodeHandle_,
+  MoveClient(std::shared_ptr<ros::NodeHandle> nodeHandle_,
          bool print_ = true,
          std::string moveServerTopic = "move_server",
          std::string visualizerTopic = "visualization_marker");
@@ -44,4 +44,4 @@ class Client {
   std::vector<tiago_iaslab_simulation::circle> getObstacles() const;
 };
 
-#endif  // CLIENT_H
+#endif  // TIAGO_IASLAB_SIMULATION_MOVE_CLIENT_H

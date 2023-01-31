@@ -58,6 +58,13 @@ class PropertyParser {
 
  public:
   template <typename T>
+  static T parse(const iaslab::XmlRpcValue& object) {
+    iaslab::XmlRpcValue temp = object;
+
+    return static_cast<T>(temp);
+  }
+
+  template <typename T>
   static T parse(const iaslab::XmlRpcValue& object, std::string name) {
     if (!object.hasMember(name)) {
       throw ros::InvalidParameterException(name + " not found");
@@ -91,6 +98,36 @@ class PropertyParser {
     }
 
     return parseEnum_<T>(object, name, mapper);
+  }
+
+  template <typename T>
+  static std::vector<T> parseVector(const iaslab::XmlRpcValue& object, std::string name) {
+    std::vector<T> temp;
+
+    const iaslab::XmlRpcValue vec = parse_<iaslab::XmlRpcValue>(object, name);
+
+    for (size_t i = 0; i < vec.size(); i++) {
+      iaslab::XmlRpcValue t = vec[i];
+
+      temp.push_back(static_cast<T>(t));
+    }
+
+    return temp;
+  }
+
+  template <typename T>
+  static std::vector<T> parseVector(const iaslab::XmlRpcValue& object) {
+    std::vector<T> temp;
+
+    const iaslab::XmlRpcValue vec = object;
+
+    for (size_t i = 0; i < vec.size(); i++) {
+      iaslab::XmlRpcValue t = vec[i];
+
+      temp.push_back(static_cast<T>(t));
+    }
+
+    return temp;
   }
 };
 

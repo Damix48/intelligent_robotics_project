@@ -3,12 +3,26 @@
 
 #include "tiago_iaslab_simulation/Objs.h"
 #include "tiago_iaslab_simulation/object.h"
+#include "tiago_iaslab_simulation/param_utils.h"
 #include "tiago_iaslab_simulation/robot.h"
 
 int main(int argc, char** argv) {
   ros::init(argc, argv, "robot_node");
 
   auto nh_ptr = std::make_shared<ros::NodeHandle>();
+
+  // GETTING PARAMS
+  XmlRpc::XmlRpcValue param;
+
+  geometry_msgs::PoseStamped pickWaypoint;
+  if (nh_ptr->getParam("/pick_waypoint", param)) {
+    pickWaypoint = iaslab::PropertyParser::parse<geometry_msgs::PoseStamped>(param);
+  }
+
+  geometry_msgs::PoseStamped placeWaypoint;
+  if (nh_ptr->getParam("/place_waypoint", param)) {
+    placeWaypoint = iaslab::PropertyParser::parse<geometry_msgs::PoseStamped>(param);
+  }
 
   // GETTING ALL OBJECTS
   XmlRpc::XmlRpcValue objects_;
@@ -17,7 +31,6 @@ int main(int argc, char** argv) {
   std::map<int, Object> objects;
 
   for (size_t i = 0; i < objects_.size(); i++) {
-    ROS_INFO_STREAM(objects_[i]);
     Object temp(objects_[i]);
     objects[temp.getId()] = temp;
   }
@@ -36,13 +49,12 @@ int main(int argc, char** argv) {
   sequenceClient.call(service);
 
   std::vector<int> sequence = service.response.ids;
-  std::vector<int> sequence_test = {2};
 
   // STARTING ROBOT
   Robot robot(nh_ptr);
-  robot.start(objects, sequence_test);
-  // robot.start(objects, sequence);
-  // robot.removeObject(1);
+  robot.setPickWaypoint(pickWaypoint);
+  robot.setPlaceWaypoint(placeWaypoint);
+  robot.start(objects, sequence);
 
   ros::spinOnce();
 

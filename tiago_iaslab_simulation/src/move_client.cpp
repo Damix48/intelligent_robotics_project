@@ -1,4 +1,4 @@
-#include "tiago_iaslab_simulation/client.h"
+#include "tiago_iaslab_simulation/move_client.h"
 
 #include <visualization_msgs/Marker.h>
 
@@ -7,7 +7,7 @@
 #include "tiago_iaslab_simulation/moveScanAction.h"
 #include "tiago_iaslab_simulation/utils.h"
 
-Client::Client(std::shared_ptr<ros::NodeHandle> nodeHandle_,
+MoveClient::MoveClient(std::shared_ptr<ros::NodeHandle> nodeHandle_,
                bool print_,
                std::string moveServerTopic,
                std::string visualizerTopic) : nodeHandle(nodeHandle_),
@@ -16,7 +16,7 @@ Client::Client(std::shared_ptr<ros::NodeHandle> nodeHandle_,
   visualizer = nodeHandle->advertise<visualization_msgs::Marker>(visualizerTopic, 1);
 }
 
-void Client::doneCallback(const actionlib::SimpleClientGoalState& state,
+void MoveClient::doneCallback(const actionlib::SimpleClientGoalState& state,
                           const tiago_iaslab_simulation::moveScanResultConstPtr& result) {
   obstacles = result->obstacles;
 
@@ -61,7 +61,7 @@ void Client::doneCallback(const actionlib::SimpleClientGoalState& state,
   }
 }
 
-void Client::feedbackCallback(const tiago_iaslab_simulation::moveScanFeedbackConstPtr& feedback) {
+void MoveClient::feedbackCallback(const tiago_iaslab_simulation::moveScanFeedbackConstPtr& feedback) {
   if (!print) {
     return;
   }
@@ -105,7 +105,7 @@ void Client::feedbackCallback(const tiago_iaslab_simulation::moveScanFeedbackCon
   }
 }
 
-bool Client::moveTo(float x, float y, float yaw, bool scan) {
+bool MoveClient::moveTo(float x, float y, float yaw, bool scan) {
   geometry_msgs::PoseStamped pose;
 
   pose.header.frame_id = "map";
@@ -115,7 +115,7 @@ bool Client::moveTo(float x, float y, float yaw, bool scan) {
   return moveTo(pose, scan);
 }
 
-bool Client::moveTo(geometry_msgs::PoseStamped pose, bool scan) {
+bool MoveClient::moveTo(geometry_msgs::PoseStamped pose, bool scan) {
   actionClient.waitForServer();
 
   tiago_iaslab_simulation::moveScanGoal goal;
@@ -124,15 +124,15 @@ bool Client::moveTo(geometry_msgs::PoseStamped pose, bool scan) {
   goal.scan = scan;
 
   actionClient.sendGoal(goal,
-                        boost::bind(&Client::doneCallback, this, _1, _2),
+                        boost::bind(&MoveClient::doneCallback, this, _1, _2),
                         actionlib::SimpleActionClient<tiago_iaslab_simulation::moveScanAction>::SimpleActiveCallback(),
-                        boost::bind(&Client::feedbackCallback, this, _1));
+                        boost::bind(&MoveClient::feedbackCallback, this, _1));
 
   actionClient.waitForResult();
 
   return actionClient.getState() == actionlib::SimpleClientGoalState::SUCCEEDED;
 }
 
-std::vector<tiago_iaslab_simulation::circle> Client::getObstacles() const {
+std::vector<tiago_iaslab_simulation::circle> MoveClient::getObstacles() const {
   return obstacles;
 }
