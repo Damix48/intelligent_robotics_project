@@ -2,7 +2,7 @@
 <launch>
   <arg name="corridor" default="false" />
 
-  <rosparam command="load" file="$(find tiago_iaslab_simulation)/cfg/objects.yaml" />
+  <rosparam command="load" file="$(find tiago_iaslab_simulation)/cfg/task_configuration.yaml" />
 
   <node name="move_node_1" pkg="tiago_iaslab_simulation" type="move_node" output="screen" />
   <node name="head_node_1" pkg="tiago_iaslab_simulation" type="head_node" output="screen" />
